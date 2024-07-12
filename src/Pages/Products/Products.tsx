@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDebounce } from "../../hooks/useDebounce";
 import { useGetAllProductsQuery } from "../../redux/features/Products/productsApi";
 
 const Products = () => {
@@ -20,9 +21,24 @@ const Products = () => {
     false,
     false,
   ]);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [priceRange, setPriceRange] = useState({ min: "", max: "" });
+  const [sortOrder, setSortOrder] = useState("asc");
 
-  const { data: products, isLoading, error } = useGetAllProductsQuery();
+  const debouncedMinPrice = useDebounce(priceRange.min, 500);
+  const debouncedMaxPrice = useDebounce(priceRange.max, 500);
+
+  const {
+    data: products,
+    isLoading,
+    error,
+  } = useGetAllProductsQuery({
+    category: selectedCategory,
+    minPrice: debouncedMinPrice ? parseFloat(debouncedMinPrice) : undefined,
+    maxPrice: debouncedMaxPrice ? parseFloat(debouncedMaxPrice) : undefined,
+    sortOrder,
+  });
 
   useEffect(() => {
     if (products && products.data) {
@@ -33,15 +49,31 @@ const Products = () => {
     }
   }, [products]);
 
-  const handleText = (value) => {
+  const handleText = (value: string) => {
     setValue(value);
     setText(!text);
   };
 
-  const handleShow = (id) => {
+  const handleShow = (id: number) => {
     var arr = [...show];
     arr[id] = !show[id];
     setShow(arr);
+  };
+
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category === selectedCategory ? "" : category);
+  };
+
+  const handlePriceRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPriceRange((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSortChange = (order: string) => {
+    setSortOrder(order);
   };
 
   if (isLoading) {
@@ -137,26 +169,28 @@ const Products = () => {
                     className="flex justify-start items-center space-x-4"
                   >
                     <button
-                      onClick={() => handleShow(index + 1)}
+                      onClick={() => handleCategoryClick(category)}
                       aria-label="Checkbox"
                       className={` ${
-                        show[index + 1] ? "bg-gray-800" : ""
+                        selectedCategory === category ? "bg-gray-800" : ""
                       } flex justify-center items-center shadow-inner w-5 h-5 border border-gray-400`}
                     >
-                      <svg
-                        width={16}
-                        height={16}
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M13.9707 3.93572L6.03408 13.0062L2.02832 9.00039L3.00059 8.02812L5.9671 10.9946L12.9359 3.03027L13.9707 3.93572Z"
-                          fill="white"
-                        />
-                      </svg>
+                      {selectedCategory === category && (
+                        <svg
+                          width={16}
+                          height={16}
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M13.9707 3.93572L6.03408 13.0062L2.02832 9.00039L3.00059 8.02812L5.9671 10.9946L12.9359 3.03027L13.9707 3.93572Z"
+                            fill="white"
+                          />
+                        </svg>
+                      )}
                     </button>
                     <p className="text-base leading-4 text-gray-600">
                       {category}
@@ -178,12 +212,18 @@ const Products = () => {
                   className="border w-24 focus:outline-none text-sm font-medium leading-4 placeholder-gray-600 text-gray-600 border-gray-300 py-3 text-center"
                   placeholder="$0"
                   type="text"
+                  name="min"
+                  value={priceRange.min}
+                  onChange={handlePriceRangeChange}
                 />
                 <div className="border border-gray-600 w-2"></div>
                 <input
                   className="border w-24 focus:outline-none text-sm font-medium leading-4 placeholder-gray-600 text-gray-600 border-gray-300 py-3 text-center"
                   placeholder="$250"
                   type="text"
+                  name="max"
+                  value={priceRange.max}
+                  onChange={handlePriceRangeChange}
                 />
               </div>
             </div>
@@ -226,25 +266,25 @@ const Products = () => {
                       } absolute z-20 mt-2 bg-white shadow-md flex justify-start items-start flex-col`}
                     >
                       <button
-                        onClick={() => handleText("Older")}
+                        onClick={() => handleSortChange("Older")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
                         Older
                       </button>
                       <button
-                        onClick={() => handleText("latest")}
+                        onClick={() => handleSortChange("latest")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
                         Latest
                       </button>
                       <button
-                        onClick={() => handleText("last Month")}
+                        onClick={() => handleSortChange("last Month")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
                         Last Month
                       </button>
                       <button
-                        onClick={() => handleText("last year")}
+                        onClick={() => handleSortChange("last year")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
                         last Year

@@ -3,10 +3,14 @@ import { baseApi } from "../../api/baseApi";
 const productsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllProducts: builder.query({
-      query: () => ({
-        url: "/allProducts",
-        method: "GET",
-      }),
+      query: ({ category, minPrice, maxPrice, sortOrder }) => {
+        let url = `/allProducts?`;
+        if (category) url += `category=${category}&`;
+        if (minPrice) url += `minPrice=${minPrice}&`;
+        if (maxPrice) url += `maxPrice=${maxPrice}&`;
+        if (sortOrder) url += `sortOrder=${sortOrder}&`;
+        return { url, method: "GET" };
+      },
     }),
     getProductById: builder.query({
       query: (id) => ({
