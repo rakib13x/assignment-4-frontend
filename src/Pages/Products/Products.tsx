@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useGetAllProductsQuery } from "../../redux/features/Products/productsApi";
 
@@ -28,6 +29,11 @@ const Products = () => {
 
   const debouncedMinPrice = useDebounce(priceRange.min, 500);
   const debouncedMaxPrice = useDebounce(priceRange.max, 500);
+  const navigate = useNavigate();
+
+  const handleProductClick = (productId: string) => {
+    navigate(`/product/${productId}`);
+  };
 
   const {
     data: products,
@@ -73,7 +79,16 @@ const Products = () => {
   };
 
   const handleSortChange = (order: string) => {
-    setSortOrder(order);
+    setSortOrder(order === "asc" ? "asc" : "desc");
+    setValue(order === "asc" ? "Low to High" : "High to Low");
+    setText(false); // Close the dropdown after selecting an option
+  };
+
+  const handleClearAll = () => {
+    setSelectedCategory("");
+    setPriceRange({ min: "", max: "" });
+    setSortOrder("asc");
+    setValue("Latest");
   };
 
   if (isLoading) {
@@ -128,7 +143,10 @@ const Products = () => {
                   </svg>
                 </button>
               </div>
-              <button className="text-base font-medium leading-4 text-gray-600">
+              <button
+                onClick={handleClearAll}
+                className="text-base font-medium leading-4 text-gray-600"
+              >
                 Clear All
               </button>
             </div>
@@ -266,28 +284,16 @@ const Products = () => {
                       } absolute z-20 mt-2 bg-white shadow-md flex justify-start items-start flex-col`}
                     >
                       <button
-                        onClick={() => handleSortChange("Older")}
+                        onClick={() => handleSortChange("asc")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
-                        Older
+                        Low to High
                       </button>
                       <button
-                        onClick={() => handleSortChange("latest")}
+                        onClick={() => handleSortChange("desc")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
-                        Latest
-                      </button>
-                      <button
-                        onClick={() => handleSortChange("last Month")}
-                        className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
-                      >
-                        Last Month
-                      </button>
-                      <button
-                        onClick={() => handleSortChange("last year")}
-                        className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
-                      >
-                        last Year
+                        High to Low
                       </button>
                     </div>
                   </div>
@@ -313,61 +319,68 @@ const Products = () => {
               </div>
             </div>
             <div className="mt-6 w-full flex md:flex-row flex-col md:justify-start md:items-start space-y-8 md:space-y-0 md:space-x-8">
-              {products.data.map((product, index) => (
-                <div
-                  key={product._id}
-                  className="flex w-full flex-col justify-start items-start"
-                >
-                  <div className="w-full relative">
-                    <img
-                      className="w-full"
-                      src={product.images[0]}
-                      alt={product.name}
-                    />
-                    <div
-                      className={`absolute top-0 right-0 bg-gray-800 p-1 ${
-                        product.stock === 0 ? "" : "hidden"
-                      }`}
-                    >
-                      <p className="text-sm leading-none text-white">
-                        Out of Stock
-                      </p>
-                    </div>
-                    <div className="absolute top-0 left-0 bg-gray-800 p-1">
-                      <p className="text-sm leading-none text-white">New</p>
-                    </div>
-                  </div>
-                  <p className="mt-4 md:mt-6 text-base md:text-lg font-medium leading-none text-gray-800">
-                    {product.name}
-                  </p>
-                  <div className="mt-2 flex items-center">
-                    {[...Array(5)].map((star, index) => (
-                      <svg
-                        key={index}
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`h-6 w-6 ${
-                          index < product.ratings
-                            ? "text-yellow-400"
-                            : "text-gray-300"
+              {products?.data && products.data.length === 0 ? (
+                <p className="text-lg font-medium leading-6 text-gray-600">
+                  No products available within the selected range.
+                </p>
+              ) : (
+                products?.data?.map((product, index) => (
+                  <div
+                    key={product._id}
+                    className="flex w-full flex-col justify-start items-start"
+                    onClick={() => handleProductClick(product._id)}
+                  >
+                    <div className="w-full relative">
+                      <img
+                        className="w-full"
+                        src={product.images[0]}
+                        alt={product.name}
+                      />
+                      <div
+                        className={`absolute top-0 right-0 bg-gray-800 p-1 ${
+                          product.stock === 0 ? "" : "hidden"
                         }`}
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-                        />
-                      </svg>
-                    ))}
+                        <p className="text-sm leading-none text-white">
+                          Out of Stock
+                        </p>
+                      </div>
+                      <div className="absolute top-0 left-0 bg-gray-800 p-1">
+                        <p className="text-sm leading-none text-white">New</p>
+                      </div>
+                    </div>
+                    <p className="mt-4 md:mt-6 text-base md:text-lg font-medium leading-none text-gray-800">
+                      {product.name}
+                    </p>
+                    <div className="mt-2 flex items-center">
+                      {[...Array(5)].map((star, index) => (
+                        <svg
+                          key={index}
+                          xmlns="http://www.w3.org/2000/svg"
+                          className={`h-6 w-6 ${
+                            index < product.ratings
+                              ? "text-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                          />
+                        </svg>
+                      ))}
+                    </div>
+                    <p className="mt-3 text-lg text-xl lg:text-2xl font-medium leading-6 text-center text-gray-600">
+                      ${product.price}
+                    </p>
                   </div>
-                  <p className="mt-3 text-lg text-xl lg:text-2xl font-medium leading-6 text-center text-gray-600">
-                    ${product.price}
-                  </p>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>
