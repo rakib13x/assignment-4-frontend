@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGetAllProductsQuery } from "../../redux/features/Products/productsApi";
 
 const Products = () => {
   const [text, setText] = useState(false);
   const [value, setValue] = useState("Latest");
-  const [filter, setfilter] = useState(false);
+  const [filter, setFilter] = useState(false);
   const [show, setShow] = useState([
     false,
     false,
@@ -19,8 +20,20 @@ const Products = () => {
     false,
     false,
   ]);
+  const [categories, setCategories] = useState([]);
 
-  const handeText = (value) => {
+  const { data: products, isLoading, error } = useGetAllProductsQuery();
+
+  useEffect(() => {
+    if (products && products.data) {
+      const uniqueCategories = [
+        ...new Set(products.data.map((product) => product.category).flat()),
+      ];
+      setCategories(uniqueCategories);
+    }
+  }, [products]);
+
+  const handleText = (value) => {
     setValue(value);
     setText(!text);
   };
@@ -31,16 +44,24 @@ const Products = () => {
     setShow(arr);
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading products.</div>;
+  }
+
   return (
     <div style={{ minHeight: 1250 }}>
       <div className="py-12 2xl:container flex-col 2xl:mx-auto px-4 md:px-6 lg:px-20 space-y-6 md:space-y-12 w-full flex justify-center items-center">
-        <div className="text-center w-full  flex justify-center items-center flex-col space-y-3 md:space-y-5"></div>
+        <div className="text-center w-full flex justify-center items-center flex-col space-y-3 md:space-y-5"></div>
         <div className="flex relative w-full justify-start items-start lg:space-x-12 xl:space-x-32">
           <div
             id="menu4"
             className={` ${
               filter ? "" : "hidden"
-            } top-24 absolute md:right-0 lg:static z-10 w-full bg-white shadow-md lg:shadow-none px-4 py-6 lg:px-0 lg:py-0 rounded-md lg:rounded-none md:w-96  lg:flex justify-start items-start flex-col `}
+            } top-24 absolute md:right-0 lg:static z-10 w-full bg-white shadow-md lg:shadow-none px-4 py-6 lg:px-0 lg:py-0 rounded-md lg:rounded-none md:w-96 lg:flex justify-start items-start flex-col `}
           >
             <div className="flex flex-col lg:flex-row justify-between items-center w-full">
               <div className="flex justify-between lg:justify-center items-center w-full lg:w-auto">
@@ -48,7 +69,7 @@ const Products = () => {
                   Filters{" "}
                 </p>
                 <button
-                  onClick={() => setfilter(!filter)}
+                  onClick={() => setFilter(!filter)}
                   className="lg:hidden"
                 >
                   <svg
@@ -110,138 +131,40 @@ const Products = () => {
                   show[0] ? "hidden" : ""
                 } flex justify-start items-start flex-col space-y-5 `}
               >
-                <div className="flex justify-start items-center space-x-4">
-                  <button
-                    onClick={() => handleShow(1)}
-                    aria-label="Checkbox"
-                    className={` ${
-                      show[1] ? "bg-gray-800" : ""
-                    } flex justify-center items-center shadow-inner w-5 h-5 border border-gray-400`}
+                {categories.map((category, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-start items-center space-x-4"
                   >
-                    <svg
-                      width={16}
-                      height={16}
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <button
+                      onClick={() => handleShow(index + 1)}
+                      aria-label="Checkbox"
+                      className={` ${
+                        show[index + 1] ? "bg-gray-800" : ""
+                      } flex justify-center items-center shadow-inner w-5 h-5 border border-gray-400`}
                     >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M13.9707 3.93572L6.03408 13.0062L2.02832 9.00039L3.00059 8.02812L5.9671 10.9946L12.9359 3.03027L13.9707 3.93572Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </button>
-                  <p className="text-base leading-4 text-gray-600">Dresses</p>
-                </div>
-                <div className="flex justify-start items-center space-x-4">
-                  <button
-                    onClick={() => handleShow(2)}
-                    data
-                    aria-label="Checkbox"
-                    className={` ${
-                      show[2] ? "bg-gray-800" : ""
-                    } flex justify-center items-center shadow-inner w-5 h-5 border border-gray-400`}
-                  >
-                    <svg
-                      width={16}
-                      height={16}
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M13.9707 3.93572L6.03408 13.0062L2.02832 9.00039L3.00059 8.02812L5.9671 10.9946L12.9359 3.03027L13.9707 3.93572Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </button>
-                  <p className="text-base leading-4 text-gray-600">Jackets</p>
-                </div>
-                <div className="flex justify-start items-center space-x-4">
-                  <button
-                    onClick={() => handleShow(3)}
-                    data
-                    aria-label="Checkbox"
-                    className={` ${
-                      show[3] ? "bg-gray-800" : ""
-                    } flex justify-center items-center shadow-inner w-5 h-5 border border-gray-400`}
-                  >
-                    <svg
-                      width={16}
-                      height={16}
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M13.9707 3.93572L6.03408 13.0062L2.02832 9.00039L3.00059 8.02812L5.9671 10.9946L12.9359 3.03027L13.9707 3.93572Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </button>
-                  <p className="text-base leading-4 text-gray-600">Shoes</p>
-                </div>
-                <div className="flex justify-start items-center space-x-4">
-                  <button
-                    onClick={() => handleShow(4)}
-                    data
-                    aria-label="Checkbox"
-                    className={` ${
-                      show[4] ? "bg-gray-800" : ""
-                    } flex justify-center items-center shadow-inner w-5 h-5 border border-gray-400`}
-                  >
-                    <svg
-                      width={16}
-                      height={16}
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M13.9707 3.93572L6.03408 13.0062L2.02832 9.00039L3.00059 8.02812L5.9671 10.9946L12.9359 3.03027L13.9707 3.93572Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </button>
-                  <p className="text-base leading-4 text-gray-600">Bags</p>
-                </div>
-                <div className="flex justify-start items-center space-x-4">
-                  <button
-                    onClick={() => handleShow(5)}
-                    data
-                    aria-label="Checkbox"
-                    className={` ${
-                      show[5] ? "bg-gray-800" : ""
-                    } flex justify-center items-center shadow-inner w-5 h-5 border border-gray-400`}
-                  >
-                    <svg
-                      width={16}
-                      height={16}
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M13.9707 3.93572L6.03408 13.0062L2.02832 9.00039L3.00059 8.02812L5.9671 10.9946L12.9359 3.03027L13.9707 3.93572Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </button>
-                  <p className="text-base leading-4 text-gray-600">Jeans</p>
-                </div>
+                      <svg
+                        width={16}
+                        height={16}
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M13.9707 3.93572L6.03408 13.0062L2.02832 9.00039L3.00059 8.02812L5.9671 10.9946L12.9359 3.03027L13.9707 3.93572Z"
+                          fill="white"
+                        />
+                      </svg>
+                    </button>
+                    <p className="text-base leading-4 text-gray-600">
+                      {category}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
-
             <hr className="w-full my-8" />
             <div className="flex justify-start flex-col items-start space-y-6">
               <p className="text-lg font-medium leading-none text-gray-800">
@@ -255,21 +178,17 @@ const Products = () => {
                   className="border w-24 focus:outline-none text-sm font-medium leading-4 placeholder-gray-600 text-gray-600 border-gray-300 py-3 text-center"
                   placeholder="$0"
                   type="text"
-                  name
-                  id
                 />
                 <div className="border border-gray-600 w-2"></div>
                 <input
                   className="border w-24 focus:outline-none text-sm font-medium leading-4 placeholder-gray-600 text-gray-600 border-gray-300 py-3 text-center"
                   placeholder="$250"
                   type="text"
-                  name
-                  id
                 />
               </div>
             </div>
           </div>
-          <div className=" flex justify-start items-start w-full flex-col">
+          <div className="flex justify-start items-start w-full flex-col">
             <div className="flex md:flex-row flex-col-reverse justify-between md:items-end w-full">
               <div className="md:hidden mt-6 md:mt-0 flex space-x-2 items-center justify-center"></div>
 
@@ -277,7 +196,7 @@ const Products = () => {
               <div className="flex flex-row w-full md:w-auto md:flex-col justify-between md:justify-end md:space-y-6">
                 <div className="lg:-mb-2 xl:-mb-1 flex justify-end md:justify-between items-center space-x-6">
                   <p className="text-base leading-6 text-gray-600">Sort by</p>
-                  <div className="relative ">
+                  <div className="relative">
                     <button
                       onClick={() => setText(!text)}
                       className="px-4 py-3 space-x-6 flex justify-center items-center bg-gray-100"
@@ -304,28 +223,28 @@ const Products = () => {
                     <div
                       className={`w-32 right-0 ${
                         text ? "" : "hidden"
-                      }  absolute z-20 mt-2 bg-white shadow-md flex justify-start items-start flex-col`}
+                      } absolute z-20 mt-2 bg-white shadow-md flex justify-start items-start flex-col`}
                     >
                       <button
-                        onClick={() => handeText("Older")}
+                        onClick={() => handleText("Older")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
                         Older
                       </button>
                       <button
-                        onClick={() => handeText("latest")}
+                        onClick={() => handleText("latest")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
                         Latest
                       </button>
                       <button
-                        onClick={() => handeText("last Month")}
+                        onClick={() => handleText("last Month")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
                         Last Month
                       </button>
                       <button
-                        onClick={() => handeText("last year")}
+                        onClick={() => handleText("last year")}
                         className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
                       >
                         last Year
@@ -334,7 +253,7 @@ const Products = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => setfilter(!filter)}
+                  onClick={() => setFilter(!filter)}
                   className="lg:hidden flex justify-end items-center space-x-2"
                 >
                   <p className="text-base leading-4 text-gray-600">Filters</p>
@@ -354,30 +273,61 @@ const Products = () => {
               </div>
             </div>
             <div className="mt-6 w-full flex md:flex-row flex-col md:justify-start md:items-start space-y-8 md:space-y-0 md:space-x-8">
-              <div className="flex w-full flex-col justify-start items-start">
-                <div className="w-full relative">
-                  <img
-                    className="w-full"
-                    src="https://i.ibb.co/9vDprz9/1.png"
-                    alt="dress"
-                  />
-                  <div className="absolute top-0  right-0 bg-gray-800 p-1">
-                    <p className="text-sm leading-none text-white">
-                      Out of Stock
-                    </p>
+              {products.data.map((product, index) => (
+                <div
+                  key={product._id}
+                  className="flex w-full flex-col justify-start items-start"
+                >
+                  <div className="w-full relative">
+                    <img
+                      className="w-full"
+                      src={product.images[0]}
+                      alt={product.name}
+                    />
+                    <div
+                      className={`absolute top-0 right-0 bg-gray-800 p-1 ${
+                        product.stock === 0 ? "" : "hidden"
+                      }`}
+                    >
+                      <p className="text-sm leading-none text-white">
+                        Out of Stock
+                      </p>
+                    </div>
+                    <div className="absolute top-0 left-0 bg-gray-800 p-1">
+                      <p className="text-sm leading-none text-white">New</p>
+                    </div>
                   </div>
-                  <div className="absolute top-0  left-0 bg-gray-800 p-1">
-                    <p className="text-sm leading-none text-white">New</p>
+                  <p className="mt-4 md:mt-6 text-base md:text-lg font-medium leading-none text-gray-800">
+                    {product.name}
+                  </p>
+                  <div className="mt-2 flex items-center">
+                    {[...Array(5)].map((star, index) => (
+                      <svg
+                        key={index}
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`h-6 w-6 ${
+                          index < product.ratings
+                            ? "text-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                        />
+                      </svg>
+                    ))}
                   </div>
+                  <p className="mt-3 text-lg text-xl lg:text-2xl font-medium leading-6 text-center text-gray-600">
+                    ${product.price}
+                  </p>
                 </div>
-                <p className="mt-4 md:mt-6 text-base md:text-lg font-medium leading-none text-gray-800">
-                  Blue pinafore denim dress
-                </p>
-                <p className="mt-3 text-lg text-xl lg:text-2xl font-medium leading-6 text-center text-gray-600">
-                  $20.00
-                </p>
-              </div>
-              <div className="flex w-full flex-col justify-start items-start"></div>
+              ))}
             </div>
           </div>
         </div>
