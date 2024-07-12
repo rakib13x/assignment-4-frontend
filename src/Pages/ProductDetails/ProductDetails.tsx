@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import RenderStars from "../../components/RenderStars";
 import { useGetProductByIdQuery } from "../../redux/features/Products/productsApi";
+import { addToCart } from "../../redux/reducer/cartReducer";
 
 const ProductDetails = () => {
   const { id } = useParams(); // Access the product ID from the URL
   const { data: product, isLoading, error } = useGetProductByIdQuery(id);
-  console.log(product?.data?.ratings);
-  const [quantity, setQuantity] = useState(0);
+  const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value, 10);
@@ -17,7 +19,7 @@ const ProductDetails = () => {
     }
   };
 
-  const addToCart = () => {
+  const handleAddToCart = () => {
     if (quantity > product?.data?.stock) {
       Swal.fire({
         icon: "error",
@@ -25,35 +27,46 @@ const ProductDetails = () => {
         text: "You cannot add more items than are in stock!",
       });
     } else {
-      // Proceed to add to cart
-      console.log("Added to cart", quantity);
+      dispatch(addToCart(product.data, quantity));
+      Swal.fire({
+        icon: "success",
+        title: "Added to Cart",
+        text: `${quantity} ${product.data.name} added to cart!`,
+      });
     }
   };
 
   useEffect(() => {
-    document.querySelector("body").addEventListener("click", (e) => {
-      // e.stopPropagation();
-      console.log("body");
-      if (
-        document.getElementById("drop-down-div1").classList.contains("active")
-      ) {
-        document.getElementById("drop-down-div1").classList.add("hidden");
-        document.getElementById("drop-down-div1").classList.remove("active");
+    const bodyClickHandler = () => {
+      const dropDownDiv = document.getElementById("drop-down-div1");
+      if (dropDownDiv && dropDownDiv.classList.contains("active")) {
+        dropDownDiv.classList.add("hidden");
+        dropDownDiv.classList.remove("active");
       }
-    });
-  });
-  function showDropDownMenu(el) {
+    };
+
+    document.querySelector("body").addEventListener("click", bodyClickHandler);
+
+    return () => {
+      document
+        .querySelector("body")
+        .removeEventListener("click", bodyClickHandler);
+    };
+  }, []);
+
+  const showDropDownMenu = (el) => {
     document.querySelectorAll(".hideme").forEach((el) => {
       el.classList.remove("active");
     });
     el.parentElement.children[1].classList.add("active");
     el.parentElement.children[1].classList.remove("hidden");
-  }
-  function text(el) {
+  };
+
+  const text = (el) => {
     const targetText = el.innerText;
     document.getElementById("drop-down-content-setter1").innerText = targetText;
     document.getElementById("drop-down-div1").classList.toggle("hidden");
-  }
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -85,7 +98,7 @@ const ProductDetails = () => {
                   {product?.data?.name}
                 </p>
                 <p className="text-2xl font-semibold leading-normal text-gray-800 mt-6">
-                  {product?.data?.price}
+                  ${product?.data?.price}
                 </p>
                 <div className="flex mt-6 gap-2">
                   <RenderStars rating={product?.data?.ratings} />
@@ -112,11 +125,11 @@ const ProductDetails = () => {
                           onChange={handleQuantityChange}
                           className="lg:max-w-[100px] w-full bg-white border px-5 py-[12px]"
                           min="1"
-                          max={product.stock}
+                          max={product.data.stock}
                         />
                       </div>
                       <button
-                        onClick={addToCart}
+                        onClick={handleAddToCart}
                         className="lg:max-w-[412px] w-full bg-gray-800 text-white hover:bg-gray-700 duration-300 py-3 lg:mt-0 mt-4"
                       >
                         Add To Cart
@@ -205,7 +218,7 @@ const ProductDetails = () => {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M14 13L15 11M8 18V17C8 15.9391 7.57857 14.9217 6.82843 14.1716C6.07828 13.4214 5.06087 13 4 13H3M10 12L11.5 9M4 6H9.426C9.60063 6.00012 9.77219 6.04598 9.9236 6.133C10.075 6.22002 10.201 6.34517 10.289 6.496L11.353 8.319C11.5574 8.66957 11.8309 8.97502 12.1568 9.21686C12.4827 9.4587 12.8542 9.63191 13.249 9.726L17.926 10.84C18.8012 11.0483 19.5806 11.5455 20.1384 12.2513C20.6961 12.9571 20.9997 13.8304 21 14.73V17C21 17.2652 20.8946 17.5196 20.7071 17.7071C20.5196 17.8946 20.2652 18 20 18H4C3.73478 18 3.48043 17.8946 3.29289 17.7071C3.10536 17.5196 3 17.2652 3 17V7C3 6.73478 3.10536 6.48043 3.29289 6.29289C3.48043 6.10536 3.73478 6 4 6Z"
+                      d="M4 6H9.426C9.60063 6.00012 9.77219 6.04598 9.9236 6.133C10.075 6.22002 10.201 6.34517 10.289 6.496L11.353 8.319C11.5574 8.66957 11.8309 8.97502 12.1568 9.21686C12.4827 9.4587 12.8542 9.63191 13.249 9.726L17.926 10.84C18.8012 11.0483 19.5806 11.5455 20.1384 12.2513C20.6961 12.9571 20.9997 13.8304 21 14.73V17C21 17.2652 20.8946 17.5196 20.7071 17.7071C20.5196 17.8946 20.2652 18 20 18H4C3.73478 18 3.48043 17.8946 3.29289 17.7071C3.10536 17.5196 3 17.2652 3 17V7C3 6.73478 3.10536 6.48043 3.29289 6.29289C3.48043 6.10536 3.73478 6 4 6Z"
                       stroke="#4B5563"
                       strokeLinecap="round"
                       strokeLinejoin="round"
