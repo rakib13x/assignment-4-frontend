@@ -1,5 +1,10 @@
-// src/Pages/CheckOut/CheckOut.tsx
-
+import {
+  CardElement,
+  Elements,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -7,14 +12,20 @@ import {
   createPaymentFailure,
   createPaymentRequest,
   createPaymentSuccess,
-} from "../../redux/actions/checkOutActions"; // Ensure this import is correct
-import { RootState } from "../../redux/store"; // Adjust the import according to your file structure
+} from "../../redux/actions/checkOutActions";
+import { RootState } from "../../redux/store";
 
-const Checkout = () => {
+// Replace with your actual publishable key
+const stripePromise = loadStripe(
+  "pk_test_51OFhwZJNaoEy3rJ7Sk85sFffgSk00kbxLXIJLuSQvcNBi6ID4K0Jb9I7FjiYcGLIInnyrgCtALWms8C6xMwjCtQ500ATLnxLG9"
+);
+
+const CheckoutForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const checkoutState = useSelector((state: RootState) => state.checkout);
+  const stripe = useStripe();
+  const elements = useElements();
 
   const [contactInfo, setContactInfo] = useState({
     email: "",
@@ -34,13 +45,6 @@ const Checkout = () => {
     saveInfo: false,
   });
 
-  const [paymentMethod, setPaymentMethod] = useState({
-    cardName: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvc: "",
-  });
-
   const handleInputChange = (e, section) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === "checkbox" ? checked : value;
@@ -55,11 +59,6 @@ const Checkout = () => {
         ...prevState,
         [name]: inputValue,
       }));
-    } else if (section === "paymentMethod") {
-      setPaymentMethod((prevState) => ({
-        ...prevState,
-        [name]: inputValue,
-      }));
     }
   };
 
@@ -69,6 +68,41 @@ const Checkout = () => {
     dispatch(createPaymentRequest());
 
     try {
+      if (!stripe || !elements) {
+        throw new Error("Stripe has not been loaded properly");
+      }
+
+      const cardElement = elements.getElement(CardElement);
+
+      if (!cardElement) {
+        throw new Error("Card Element not found");
+      }
+
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+        billing_details: {
+          name: `${shippingDetails.firstName} ${shippingDetails.lastName}`,
+          email: contactInfo.email,
+          address: {
+            line1: shippingDetails.address,
+            line2: shippingDetails.address2,
+            city: shippingDetails.city,
+            state: shippingDetails.region,
+            postal_code: shippingDetails.zip,
+            country: shippingDetails.country,
+          },
+          phone: shippingDetails.phone,
+        },
+      });
+
+      if (error) {
+        console.error("Stripe createPaymentMethod error:", error.message);
+        throw new Error(error.message);
+      }
+
+      const productId = cartItems.length > 0 ? cartItems[0].id : null; // Ensure this is a valid ObjectId
+
       const response = await fetch(
         "http://localhost:3000/api/v1/create-payment",
         {
@@ -77,15 +111,17 @@ const Checkout = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            productId: "someProductId", // Ensure this is dynamically set
-            amount: calculateGrandTotal(),
+            productId, // Ensure this is dynamically set and is a valid ObjectId
+            amount: calculateGrandTotal(), // Amount should be in cents
             currency: "usd", // Ensure this matches your backend expectations
-            paymentMethodId: paymentMethod.cardNumber, // This should be the actual payment method ID
+            paymentMethodId: paymentMethod.id, // Use the generated payment method ID
           }),
         }
       );
 
       if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Backend error:", errorData);
         throw new Error("Payment failed");
       }
 
@@ -95,6 +131,7 @@ const Checkout = () => {
       // Navigate to success page or display success message
       navigate("/success");
     } catch (error) {
+      console.error("Error in handleSubmit:", error.message);
       dispatch(createPaymentFailure(error.message));
     }
   };
@@ -104,9 +141,10 @@ const Checkout = () => {
   };
 
   const calculateGrandTotal = () => {
-    return cartItems
-      .reduce((total, item) => total + item.price * item.quantity, 0)
-      .toFixed(2);
+    return Math.round(
+      cartItems.reduce((total, item) => total + item.price * item.quantity, 0) *
+        100
+    ); // Convert to cents
   };
 
   return (
@@ -282,7 +320,7 @@ const Checkout = () => {
                   </div>
                   <div className="price">
                     <p className="text-lg font-semibold leading-none text-gray-600">
-                      ${calculateGrandTotal()}
+                      ${calculateGrandTotal() / 100}
                     </p>
                   </div>
                 </div>
@@ -295,7 +333,7 @@ const Checkout = () => {
                   </div>
                   <div className="price">
                     <p className="text-2xl font-semibold leading-normal text-gray-800">
-                      ${calculateGrandTotal()}
+                      ${calculateGrandTotal() / 100}
                     </p>
                   </div>
                 </div>
@@ -311,42 +349,23 @@ const Checkout = () => {
             <p className="text-xl font-semibold leading-tight text-gray-800">
               Payment Method
             </p>
-            <div className="flex md:flex-row flex-col">
-              <input
-                type="text"
-                name="cardName"
-                value={paymentMethod.cardName}
-                onChange={(e) => handleInputChange(e, "paymentMethod")}
-                className="pb-4 rounded border-b border-gray-200 block w-full placeholder-gray-600 mt-6 focus:outline-0"
-                placeholder="Name of Card"
-              />
-              <input
-                type="text"
-                name="cardNumber"
-                value={paymentMethod.cardNumber}
-                onChange={(e) => handleInputChange(e, "paymentMethod")}
-                className="pb-4 rounded border-b border-gray-200 block w-full placeholder-gray-600 mt-6 md:ml-8 focus:outline-0"
-                placeholder="Card Number"
-              />
-            </div>
-            <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row relative">
-              <div className="mx-auto mt-6 w-full">
-                <input
-                  type="text"
-                  name="expiryDate"
-                  value={paymentMethod.expiryDate}
-                  onChange={(e) => handleInputChange(e, "paymentMethod")}
-                  className="pb-4 rounded border-b border-gray-200 block w-full placeholder-gray-600 focus:outline-0"
-                  placeholder="Expiry Date"
-                />
-              </div>
-              <input
-                type="text"
-                name="cvc"
-                value={paymentMethod.cvc}
-                onChange={(e) => handleInputChange(e, "paymentMethod")}
-                className="pb-4 rounded border-b border-gray-200 block w-full placeholder-gray-600 mt-6 sm:ml-8 md:ml-0 lg:ml-8 focus:outline-0"
-                placeholder="CVC"
+            <div className="flex flex-col justify-center p-4 border border-gray-300 rounded-md mt-4">
+              <CardElement
+                options={{
+                  style: {
+                    base: {
+                      fontSize: "16px",
+                      color: "#424770",
+                      "::placeholder": {
+                        color: "#aab7c4",
+                      },
+                    },
+                    invalid: {
+                      color: "#9e2146",
+                    },
+                  },
+                }}
+                className="p-3 border border-gray-200 rounded-md"
               />
             </div>
           </div>
@@ -363,6 +382,14 @@ const Checkout = () => {
         </div>
       </form>
     </div>
+  );
+};
+
+const Checkout = () => {
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutForm />
+    </Elements>
   );
 };
 
