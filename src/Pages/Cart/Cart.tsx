@@ -325,7 +325,7 @@ const Cart = () => {
           </div>
         </div>
         <div className="lg:flex justify-between items-center lg:px-10 md:x-6 px-4 mt-12">
-          <Link to="/checkOut">
+          <Link to="/checkout">
             <div>
               <button className="bg-gray-800 flex justify-center gap-4 items-center min-w-[296px] w-full py-3 px-3 hover:bg-gray-700 transition duration-300 ease-out">
                 <p className="text-base font-medium leading-none text-white">

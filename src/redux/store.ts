@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "./api/baseApi";
 import cartReducer from "./reducer/cartReducer";
+import checkoutReducer from "./reducer/checkoutReducer";
 
 // Function to load the state from local storage
 const loadState = () => {
@@ -32,6 +33,7 @@ const persistedState = loadState();
 export const store = configureStore({
   reducer: {
     cart: cartReducer, // Spread your existing reducers
+    checkout: checkoutReducer,
     [baseApi.reducerPath]: baseApi.reducer, // API reducer
   },
   middleware: (getDefaultMiddleware) =>
