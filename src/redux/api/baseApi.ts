@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://assignment-4-lake-ten.vercel.app/api/v1",
+  baseUrl:
+    "https://assignment-4-cx2crmvrh-rakib13xgmailcoms-projects.vercel.app/api/v1",
   credentials: "include",
 });
 
