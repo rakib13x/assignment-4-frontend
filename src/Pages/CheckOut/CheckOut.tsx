@@ -17,9 +17,7 @@ import {
 import { useAppSelector } from "../../redux/hooks";
 import { clearCart } from "../../redux/reducer/cartReducer";
 
-const stripePromise = loadStripe(
-  "pk_test_51OFhwZJNaoEy3rJ7Sk85sFffgSk00kbxLXIJLuSQvcNBi6ID4K0Jb9I7FjiYcGLIInnyrgCtALWms8C6xMwjCtQ500ATLnxLG9"
-);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const CheckoutForm = () => {
   const stripe = useStripe();
