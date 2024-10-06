@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -143,45 +144,38 @@ const NavBar = () => {
             <div className="hidden lg:block">
               <ul className="flex items-center space-x-10">
                 <li>
-                  <a
-                    href="javascript:void(0)"
+                  <Link
+                    to="/"
                     className="dark:text-white dark:hover:text-gray-300 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                   >
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="javascript:void(0)"
+                  <Link
+                    to="/allProducts"
                     className="dark:text-white dark:hover:text-gray-300 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                   >
-                    Catalog
-                  </a>
+                    Products
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="javascript:void(0)"
+                  <Link
+                    to="/about"
                     className="dark:text-white dark:hover:text-gray-300 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                   >
-                    Pages
-                  </a>
+                    About
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="javascript:void(0)"
-                    className="dark:text-white dark:hover:text-gray-300 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
+                  <Link
+                    to="/product-management"
+                    className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                   >
-                    Blog
-                  </a>
+                    Dashboard
+                  </Link>
                 </li>
-                <li>
-                  <a
-                    href="javascript:void(0)"
-                    className="dark:text-white dark:hover:text-gray-300 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                  >
-                    Contact us
-                  </a>
-                </li>
+                <li></li>
               </ul>
             </div>
           </div>
@@ -347,12 +341,12 @@ const NavBar = () => {
               <div className="mt-8">
                 <ul className="flex flex-col space-y-8">
                   <li className="flex items-center justify-between">
-                    <a
-                      href="javascript:void(0)"
+                    <Link
+                      to="/"
                       className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                     >
                       Home
-                    </a>
+                    </Link>
                     <button
                       className="fill-stroke text-black dark:text-white"
                       aria-label="show options"
@@ -375,12 +369,12 @@ const NavBar = () => {
                     </button>
                   </li>
                   <li className="flex items-center justify-between">
-                    <a
-                      href="javascript:void(0)"
-                      className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
+                    <Link
+                      to="/allProducts"
+                      className="dark:text-white dark:hover:text-gray-300 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                     >
-                      Catalog
-                    </a>
+                      Products
+                    </Link>
                     <button
                       className="fill-stroke text-black dark:text-white"
                       aria-label="show options"
@@ -403,12 +397,12 @@ const NavBar = () => {
                     </button>
                   </li>
                   <li className="flex items-center justify-between">
-                    <a
-                      href="javascript:void(0)"
-                      className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
+                    <Link
+                      to="/about"
+                      className="dark:text-white dark:hover:text-gray-300 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                     >
-                      Pages
-                    </a>
+                      About
+                    </Link>
                     <button
                       className="fill-stroke text-black dark:text-white"
                       aria-label="show options"
@@ -431,12 +425,12 @@ const NavBar = () => {
                     </button>
                   </li>
                   <li className="flex items-center justify-between">
-                    <a
-                      href="javascript:void(0)"
+                    <Link
+                      to="/product-management"
                       className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                     >
-                      Blog
-                    </a>
+                      Dashboard
+                    </Link>
                     <button
                       className="fill-stroke text-black dark:text-white"
                       aria-label="show options"
@@ -459,12 +453,6 @@ const NavBar = () => {
                     </button>
                   </li>
                   <li className="flex items-center justify-between">
-                    <a
-                      href="javascript:void(0)"
-                      className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                    >
-                      Contact us
-                    </a>
                     <button
                       className="fill-stroke text-black dark:text-white"
                       aria-label="show options"
@@ -750,12 +738,12 @@ const NavBar = () => {
           <div className="mt-6 mx-4">
             <ul className="flex flex-col space-y-8">
               <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
+                <Link
+                  to="/"
                   className="text-base text-gray-800 focus:outline-none dark:text-white focus:ring-2 focus:ring-gray-800 hover:underline"
                 >
                   Home
-                </a>
+                </Link>
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
                   <svg
                     className="fill-stroke"
@@ -776,12 +764,12 @@ const NavBar = () => {
                 </button>
               </li>
               <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-base text-gray-800 focus:outline-none dark:text-white focus:ring-2 focus:ring-gray-800 hover:underline"
+                <Link
+                  to="/allProducts"
+                  className="dark:text-white dark:hover:text-gray-300 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                 >
-                  Catalog
-                </a>
+                  Products
+                </Link>
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
                   <svg
                     className="fill-stroke"
@@ -802,12 +790,12 @@ const NavBar = () => {
                 </button>
               </li>
               <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-base text-gray-800 focus:outline-none dark:text-white focus:ring-2 focus:ring-gray-800 hover:underline"
+                <Link
+                  to="/about"
+                  className="dark:text-white dark:hover:text-gray-300 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                 >
-                  Pages
-                </a>
+                  About
+                </Link>
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
                   <svg
                     className="fill-stroke"
@@ -828,12 +816,12 @@ const NavBar = () => {
                 </button>
               </li>
               <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-base text-gray-800 focus:outline-none dark:text-white focus:ring-2 focus:ring-gray-800 hover:underline"
+                <Link
+                  to="/product-management"
+                  className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                 >
-                  Blog
-                </a>
+                  Dashboard
+                </Link>
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
                   <svg
                     className="fill-stroke"
@@ -854,12 +842,6 @@ const NavBar = () => {
                 </button>
               </li>
               <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-base text-gray-800 focus:outline-none dark:text-white focus:ring-2 focus:ring-gray-800 hover:underline"
-                >
-                  Contact us
-                </a>
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
                   <svg
                     className="fill-stroke"

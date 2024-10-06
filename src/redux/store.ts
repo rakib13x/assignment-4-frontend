@@ -1,53 +1,65 @@
+// src/redux/store.ts
+
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "./api/baseApi";
+import { productsApi } from "./features/Products/productsApi";
 import cartReducer from "./reducer/cartReducer";
 import checkoutReducer from "./reducer/checkoutReducer";
 
-// Function to load the state from local storage
 const loadState = () => {
   try {
     const serializedState = localStorage.getItem("cart");
     if (serializedState === null) {
       return undefined;
     }
-    return JSON.parse(serializedState);
+    // Parse the cart items array and wrap it inside the cart object
+    const cartItems = JSON.parse(serializedState);
+    return { cart: { items: cartItems } };
   } catch (err) {
     return undefined;
   }
 };
 
-// Function to save the state to local storage
 const saveState = (state) => {
   try {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem("cart", serializedState);
+    if (state.cart.items.length === 0) {
+      localStorage.removeItem("cart");
+    } else {
+      const serializedState = JSON.stringify(state.cart.items);
+      localStorage.setItem("cart", serializedState);
+    }
   } catch {
     // Ignore write errors
   }
 };
 
-// Load the persisted state
 const persistedState = loadState();
 
-// Configure the store
 export const store = configureStore({
   reducer: {
-    cart: cartReducer, // Spread your existing reducers
+    cart: cartReducer,
     checkout: checkoutReducer,
-    [baseApi.reducerPath]: baseApi.reducer, // API reducer
+    [baseApi.reducerPath]: baseApi.reducer,
+    // [productsApi.reducerPath]: productsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware),
-  preloadedState: persistedState, // Load persisted state
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "persist/PAUSE",
+          "persist/PURGE",
+          "persist/REGISTER",
+        ],
+      },
+    }).concat(baseApi.middleware, productsApi.middleware),
+  preloadedState: persistedState,
 });
 
-// Subscribe to store changes to save to local storage
 store.subscribe(() => {
-  saveState({
-    cart: store.getState().cart, // Only persist the cart part of the state
-  });
+  saveState(store.getState());
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

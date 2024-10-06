@@ -1,17 +1,30 @@
+// src/Pages/ProductManagement/ProductManagement.tsx
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Modal from "../../components/Modal";
 import UpdateModal from "../../components/UpdateModal";
+import {
+  useDeleteProductMutation,
+  useGetAllProductsQuery,
+} from "../../redux/features/Products/productsApi";
 
 const ProductManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
+
+  const { data: products = [], error, isLoading } = useGetAllProductsQuery({});
+  const [deleteProduct] = useDeleteProductMutation();
 
   const handleAddProductClick = () => {
     setIsModalOpen(true);
   };
-  const handleUpdateProductClick = () => {
+
+  const handleUpdateProductClick = (productId: string) => {
+    setSelectedProductId(productId);
     setIsUpdateModalOpen(true);
   };
 
@@ -20,7 +33,28 @@ const ProductManagement = () => {
   };
   const handleCloseUpdateModal = () => {
     setIsUpdateModalOpen(false);
+    setSelectedProductId(null);
   };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (!productId) {
+      console.error("Product ID is undefined");
+      return;
+    }
+
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        await deleteProduct(productId).unwrap();
+        alert("Product deleted successfully.");
+      } catch (error) {
+        console.error("Failed to delete product:", error);
+      }
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading products...</div>;
+  }
 
   return (
     <>
@@ -47,7 +81,7 @@ const ProductManagement = () => {
                     Image
                   </th>
                   <th className="text-gray-600 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                    name
+                    Name
                   </th>
                   <th className="text-gray-600 font-normal pr-6 text-left text-sm tracking-normal leading-4">
                     Price
@@ -66,55 +100,70 @@ const ProductManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="h-24 border-gray-300 border-t border-b hover:border-indigo-300 hover:shadow-md cursor-pointer transition duration-150 ease-in-out">
-                  <td className="pl-8 pr-6 text-left whitespace-no-wrap text-sm text-gray-800 tracking-normal leading-4">
-                    06/02/2020
-                  </td>
-                  <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 tracking-normal leading-4">
-                    9:00 am
-                  </td>
-                  <td className="pr-6">
-                    <div className="w-full flex justify-start items-center h-full">
-                      <div className="bg-indigo-200 text-indigo-700 rounded-full text-sm leading-3 py-2 px-5">
-                        New
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 tracking-normal leading-4">
-                    Saun Berenson
-                  </td>
-                  <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 tracking-normal leading-4">
-                    <div className="flex items-center">
-                      <a
-                        className="rounded border border-transparent focus:outline-none focus:border-gray-800 focus:shadow-outline-gray"
-                        href="javascript: void(0)"
-                      >
-                        <div className="p-2 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer text-indigo-700">
-                          <FaEdit
-                            className="size-5"
-                            onClick={handleUpdateProductClick}
-                          />
-                        </div>
-                      </a>
+                {products.length > 0 ? (
+                  products.map((product) => (
+                    <tr
+                      key={product.id}
+                      className="h-24 border-gray-300 border-t border-b hover:border-indigo-300 hover:shadow-md cursor-pointer transition duration-150 ease-in-out"
+                    >
+                      <td className="pl-8 pr-6 text-left whitespace-no-wrap text-sm text-gray-800 tracking-normal leading-4">
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="w-16 h-16 object-cover rounded"
+                        />
+                      </td>
+                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 tracking-normal leading-4">
+                        {product.name}
+                      </td>
+                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 tracking-normal leading-4">
+                        ${product.price}
+                      </td>
+                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 tracking-normal leading-4">
+                        {product.category.join(", ")}
+                      </td>
+                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 tracking-normal leading-4">
+                        <div className="flex items-center">
+                          <button
+                            className="rounded focus:outline-none"
+                            onClick={() => handleUpdateProductClick(product.id)}
+                          >
+                            <div className="p-2 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer text-indigo-700">
+                              <FaEdit className="size-5" />
+                            </div>
+                          </button>
 
-                      <a
-                        className="rounded border border-transparent focus:outline-none focus:border-gray-800 focus:shadow-outline-gray"
-                        href="javascript: void(0)"
-                      >
-                        <div className="p-2 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer text-red-500">
-                          <MdDelete className="size-5" />
+                          <button
+                            className="rounded focus:outline-none"
+                            onClick={() => handleDeleteProduct(product.id)}
+                          >
+                            <div className="p-2 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer text-red-500">
+                              <MdDelete className="size-5" />
+                            </div>
+                          </button>
                         </div>
-                      </a>
-                    </div>
-                  </td>
-                </tr>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="text-center py-4 text-gray-600">
+                      No products available.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
         </div>
       </div>
       {isModalOpen && <Modal onClose={handleCloseModal} />}
-      {isUpdateModalOpen && <UpdateModal onClose={handleCloseUpdateModal} />}
+      {isUpdateModalOpen && selectedProductId && (
+        <UpdateModal
+          onClose={handleCloseUpdateModal}
+          // productId={selectedProductId}
+        />
+      )}
     </>
   );
 };
