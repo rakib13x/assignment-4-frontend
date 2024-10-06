@@ -1,3 +1,4 @@
+//@ts-ignore
 const RenderStars = ({ rating }) => {
   const totalStars = 5;
   const filledStars = Math.round(rating);

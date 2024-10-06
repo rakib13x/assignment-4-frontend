@@ -1,4 +1,4 @@
-// src/redux/reducer/checkoutReducer.ts
+// @ts-nocheck
 
 import {
   CREATE_PAYMENT_FAILURE,

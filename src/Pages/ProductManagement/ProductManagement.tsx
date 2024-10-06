@@ -16,7 +16,7 @@ const ProductManagement = () => {
     null
   );
 
-  const { data: products = [], error, isLoading } = useGetAllProductsQuery({});
+  const { data: products = [], isLoading } = useGetAllProductsQuery({});
   const [deleteProduct] = useDeleteProductMutation();
 
   const handleAddProductClick = () => {

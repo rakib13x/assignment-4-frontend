@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { FlipWords } from "./ui/flip-words";

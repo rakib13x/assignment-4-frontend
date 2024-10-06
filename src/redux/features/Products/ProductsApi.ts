@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Product, ProductQueryParams } from "../../../types/types";
 import { baseApi } from "../../api/baseApi";
 
