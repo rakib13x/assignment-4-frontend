@@ -18,6 +18,7 @@ import {
 import { useAppSelector } from "../../redux/hooks";
 import { clearCart } from "../../redux/reducer/cartReducer";
 
+// Initialize Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const CheckoutForm = () => {
@@ -25,30 +26,32 @@ const CheckoutForm = () => {
   const elements = useElements();
   const dispatch = useDispatch();
 
+  // Mutation hooks from your API
   const [createPaymentIntent] = useCreatePaymentIntentMutation();
   const [confirmPayment] = useConfirmPaymentMutation();
-  const [createCodOrder] = useCreateCodOrderMutation(); // COD mutation
+  const [createCodOrder] = useCreateCodOrderMutation();
 
+  // User and cart state
   const [user, setUser] = useState({
     name: "Fahim Ahammed",
     email: "fahim@ph.com",
     phone: "0123456789",
     address: "Dhaka, Bangladesh",
   });
-
   const cartItems = useAppSelector((store) => store.cart.items);
   const [amount, setAmount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("card");
 
-  // Calculate total amount
+  // Calculate total amount (in cents)
   useEffect(() => {
     const total = cartItems.reduce(
       (acc, item) => acc + item.price * item.quantity,
       0
     );
-    setAmount(total * 100); // Stripe expects amount in cents
+    setAmount(total * 100); // Stripe requires the amount in cents
   }, [cartItems]);
 
+  // Handle form input changes for user info
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser({
       ...user,
@@ -56,33 +59,38 @@ const CheckoutForm = () => {
     });
   };
 
+  // Handle payment method change (Card / COD)
   const handlePaymentMethodChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setPaymentMethod(e.target.value);
   };
 
+  // Handle form submission
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     const products = cartItems.map((item) => ({
       productId: item._id,
       quantity: item.quantity,
-      price: item.price,
+      price: item.price, // Include price for each product
     }));
 
+    // Card Payment Flow
     if (paymentMethod === "card") {
-      // Card Payment with Stripe
       try {
+        // Create payment intent
         const paymentIntent = await createPaymentIntent({
           amount,
           products,
+          user,
         }).unwrap();
 
         if (paymentIntent.clientSecret) {
           const cardElement = elements?.getElement(CardElement);
           if (!stripe || !cardElement) return;
 
+          // Confirm the payment with Stripe
           const { error, paymentIntent: confirmedPaymentIntent } =
             await stripe.confirmCardPayment(paymentIntent.clientSecret, {
               payment_method: {
@@ -98,6 +106,7 @@ const CheckoutForm = () => {
               },
             });
 
+          // Handle errors or success in payment
           if (error) {
             Swal.fire({
               title: "Payment Failed",
@@ -110,7 +119,7 @@ const CheckoutForm = () => {
               paymentIntentId: confirmedPaymentIntent.id,
             }).unwrap();
 
-            dispatch(clearCart());
+            dispatch(clearCart()); // Clear cart after payment success
 
             Swal.fire({
               title: "Payment Successful!",
@@ -128,15 +137,17 @@ const CheckoutForm = () => {
           confirmButtonText: "OK",
         });
       }
-    } else {
-      // Cash on Delivery
+    }
+
+    // Cash on Delivery (COD) Flow
+    if (paymentMethod === "cod") {
       try {
         await createCodOrder({
           user,
-          products,
+          products, // Pass both user and products data for COD
         }).unwrap();
 
-        dispatch(clearCart());
+        dispatch(clearCart()); // Clear cart after successful COD order
 
         Swal.fire({
           title: "Order Placed",

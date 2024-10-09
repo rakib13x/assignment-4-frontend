@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom"; // Import Link to navigate
 import Swal from "sweetalert2";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
@@ -238,6 +239,20 @@ const Cart = () => {
                 ${calculateTotal()}
               </p>
             </div>
+          </div>
+
+          {/* Checkout Button */}
+          <div className="mt-8 flex justify-center">
+            <Link
+              to={{
+                pathname: "/checkout", // Link to checkout page
+              }}
+              state={{ cartItems, total: calculateTotal() }} // Pass cart items and total to checkout page
+            >
+              <button className="bg-green-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-700 transition duration-300">
+                Proceed to Checkout
+              </button>
+            </Link>
           </div>
         </div>
       </div>

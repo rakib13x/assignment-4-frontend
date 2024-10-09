@@ -4,7 +4,11 @@ export const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createPaymentIntent: builder.mutation<
       { clientSecret: string },
-      { amount: number; products: { productId: string; quantity: number }[] }
+      {
+        amount: number;
+        user: { name: string; email: string; phone: string; address: string };
+        products: { productId: string; quantity: number; price: number }[];
+      }
     >({
       query: (data) => ({
         url: `/payment/create-payment-intent`,
