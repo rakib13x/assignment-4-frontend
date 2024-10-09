@@ -1,6 +1,7 @@
-import liveLife from "../assets/images/lite-gear.webp";
+import campingBlog1 from "../assets/images/camping-blog-1.jpg";
+import campingBlog2 from "../assets/images/camping-blog-2.jpg";
+import campingBlog3 from "../assets/images/camping-blog-3.jpeg";
 const Blog = () => {
-  console.log(liveLife);
   return (
     <section className="w-screen py-20">
       <h1 className="mb-12 text-center font-sans text-5xl font-bold">
@@ -10,20 +11,20 @@ const Blog = () => {
         <article className="group h-full overflow-hidden rounded-lg border-2 border-gray-200 border-opacity-60 shadow-lg">
           <img
             className="w-full transform object-cover object-center transition duration-500 ease-in-out group-hover:scale-105 md:h-36 lg:h-48"
-            src="https://images.unsplash.com/photo-1611002214172-792c1f90b59a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw3fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
-            alt="blog"
+            src={campingBlog1}
+            alt="blog-1"
           />
           <h2 className="title-font inline-block cursor-pointer px-6 pt-4 pb-1 text-xs font-semibold uppercase tracking-widest text-orange-600 hover:font-bold">
-            Cities
+            Adventure
           </h2>
           <div className="py-1 px-6">
             <h1 className="title-font mb-3 inline-block cursor-pointer text-xl capitali font-extrabold tracking-wide text-gray-800">
-              How to get around in New York
+              Escape the City: Discover Tranquility in Nature's Heart
             </h1>
             <p className="line-clamp-6 mb-3 cursor-pointer overflow-hidden leading-relaxed text-gray-500">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil,
-              maxime. Accusamus qui incidunt est rem at corrupti, earum fugiat
-              iure.
+              Blog content can focus on how camping allows you to reconnect with
+              nature, offering peace and solitude away from the bustling city
+              life.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-between px-6 pt-1 pb-4">
@@ -62,20 +63,19 @@ const Blog = () => {
         <article className="group h-full overflow-hidden rounded-lg border-2 border-gray-200 border-opacity-60 shadow-lg">
           <img
             className="w-full transform object-cover object-center transition duration-500 ease-in-out group-hover:scale-105 md:h-36 lg:h-48"
-            src="https://images.unsplash.com/photo-1660569883128-765b7c16f731?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
-            alt="blog"
+            src={campingBlog2}
+            alt="blog-2"
           />
           <h2 className="title-font inline-block cursor-pointer px-6 pt-4 pb-1 text-xs font-semibold uppercase tracking-widest text-orange-600 hover:font-bold">
-            Cities
+            Outdoor Life
           </h2>
           <div className="py-1 px-6">
             <h1 className="title-font mb-3 inline-block cursor-pointer text-xl capitali font-extrabold tracking-wide text-gray-800">
-              How to get around in New York
+              Top 5 Must-Have Gear for the Ultimate Camping Experience
             </h1>
             <p className="line-clamp-6 mb-3 cursor-pointer overflow-hidden leading-relaxed text-gray-500">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil,
-              maxime. Accusamus qui incidunt est rem at corrupti, earum fugiat
-              iure.
+              The blog can cover essential camping gear and tools to enhance
+              your outdoor adventure and ensure a safe and enjoyable trip.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-between px-6 pt-1 pb-4">
@@ -114,20 +114,19 @@ const Blog = () => {
         <article className="group h-full overflow-hidden rounded-lg border-2 border-gray-200 border-opacity-60 shadow-lg">
           <img
             className="w-full transform object-cover object-center transition duration-500 ease-in-out group-hover:scale-105 md:h-36 lg:h-48"
-            src="https://images.unsplash.com/photo-1660548311281-61e57dad92e3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
-            alt="blog"
+            src={campingBlog3}
+            alt="blog-3"
           />
           <h2 className="title-font inline-block cursor-pointer px-6 pt-4 pb-1 text-xs font-semibold uppercase tracking-widest text-orange-600 hover:font-bold">
-            Cities
+            Wilderness
           </h2>
           <div className="py-1 px-6">
             <h1 className="title-font mb-3 inline-block cursor-pointer text-xl capitali font-extrabold tracking-wide text-gray-800">
-              How to get around in New York
+              The Joys of Campfire Cooking: Delicious Recipes for the Outdoors
             </h1>
             <p className="line-clamp-6 mb-3 cursor-pointer overflow-hidden leading-relaxed text-gray-500">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil,
-              maxime. Accusamus qui incidunt est rem at corrupti, earum fugiat
-              iure.
+              This post can highlight how to cook flavorful meals while camping,
+              with easy-to-follow recipes perfect for outdoor enthusiasts.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-between px-6 pt-1 pb-4">
