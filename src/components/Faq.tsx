@@ -1,4 +1,5 @@
 import { useState } from "react";
+import survivingGear from "../assets/images/surviving-gear.webp";
 
 const Faq = () => {
   const [show, setShow] = useState(false);
@@ -54,14 +55,14 @@ const Faq = () => {
       <div className=" flex md:flex-row flex-col md:space-x-8 md:mt-16 mt-8">
         <div className=" md:w-5/12 lg:w-4/12 w-full ">
           <img
-            src="https://i.ibb.co/8bCs73h/pexels-ron-lach-8128069-1.png"
-            alt="Img of Glass bottle"
-            className="w-full md:block hidden"
+            className="object-center object-cover h-12 w-full"
+            src={survivingGear}
+            alt="survivingGear"
           />
           <img
-            src="https://i.ibb.co/gZMfQJq/pexels-ron-lach-8128069-1-1.png"
-            alt="Img of Glass bottle"
-            className="w-full md:hidden block "
+            className="object-center object-cover h-full w-full"
+            src={survivingGear}
+            alt="survivingGear"
           />
         </div>
         <div className=" md:w-7/12 lg:w-8/12 w-full md:mt-0 sm:mt-14 mt-10">

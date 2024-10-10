@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
@@ -14,7 +15,6 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
 
-  // Correct typing for sortOrder
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>("asc");
 
   const debouncedMinPrice = useDebounce(priceRange.min, 500);
@@ -33,7 +33,7 @@ const Products = () => {
     category: selectedCategory,
     minPrice: debouncedMinPrice ? parseFloat(debouncedMinPrice) : undefined,
     maxPrice: debouncedMaxPrice ? parseFloat(debouncedMaxPrice) : undefined,
-    sortOrder, // Now typed correctly
+    sortOrder,
   });
 
   useEffect(() => {
@@ -44,11 +44,6 @@ const Products = () => {
       setCategories(uniqueCategories);
     }
   }, [products]);
-
-  // const handleText = (value: string) => {
-  //   setValue(value);
-  //   setText(!text);
-  // };
 
   const handleShow = (id: number) => {
     const arr = [...show];
@@ -68,7 +63,6 @@ const Products = () => {
     }));
   };
 
-  // Update the handleSortChange function to correctly assign sortOrder
   const handleSortChange = (order: "asc" | "desc") => {
     setSortOrder(order);
     setValue(order === "asc" ? "Low to High" : "High to Low");
@@ -97,19 +91,20 @@ const Products = () => {
         <div className="py-12 2xl:container flex-col 2xl:mx-auto px-4 md:px-6 lg:px-20 space-y-6 md:space-y-12 w-full flex justify-center items-center">
           <div className="text-center w-full flex justify-center items-center flex-col space-y-3 md:space-y-5"></div>
           <div className="flex relative w-full justify-start items-start lg:space-x-12 xl:space-x-32">
+            {/* Filter Section */}
             <div
               id="menu4"
-              className={` ${
-                filter ? "" : "hidden"
-              } top-24 absolute md:right-0 lg:static z-10 w-full bg-white shadow-md lg:shadow-none px-4 py-6 lg:px-0 lg:py-0 rounded-md lg:rounded-none md:w-96 lg:flex justify-start items-start flex-col `}
+              className={`${
+                filter ? "block" : "hidden lg:flex"
+              } absolute lg:static z-10 inset-0 w-full h-full lg:h-auto lg:w-96 bg-white lg:bg-transparent shadow-md lg:shadow-none px-4 py-6 lg:px-0 lg:py-0 rounded-md lg:rounded-none lg:flex-col`}
             >
               <div className="flex flex-col lg:flex-row justify-between items-center w-full">
                 <div className="flex justify-between lg:justify-center items-center w-full lg:w-auto">
                   <p className="text-lg font-medium leading-none text-gray-800">
-                    Filters{" "}
+                    Filters
                   </p>
                   <button
-                    onClick={() => setFilter(!filter)}
+                    onClick={() => setFilter(false)} // Close filter on mobile
                     className="lg:hidden"
                   >
                     <svg
@@ -170,9 +165,9 @@ const Products = () => {
                 </div>
                 <div
                   id="menu1"
-                  className={` ${
+                  className={`${
                     show[0] ? "hidden" : ""
-                  } flex justify-start items-start flex-col space-y-5 `}
+                  } flex justify-start items-start flex-col space-y-5`}
                 >
                   {categories.map((category, index) => (
                     <div
@@ -182,7 +177,7 @@ const Products = () => {
                       <button
                         onClick={() => handleCategoryClick(category)}
                         aria-label="Checkbox"
-                        className={` ${
+                        className={`${
                           selectedCategory === category ? "bg-gray-800" : ""
                         } flex justify-center items-center shadow-inner w-5 h-5 border border-gray-400`}
                       >
@@ -240,62 +235,21 @@ const Products = () => {
               </div>
             </div>
             {/* Product Grid Section */}
+            {/* Product Grid Section */}
             <div className="flex justify-start items-start w-full flex-col">
               <div className="flex md:flex-row flex-col-reverse justify-between md:items-end w-full">
-                <div className="md:hidden mt-6 md:mt-0 flex space-x-2 items-center justify-center"></div>
-
-                <div className="hidden md:flex space-x-2 items-center justify-center"></div>
-                <div className="flex flex-row w-full md:w-auto md:flex-col justify-between md:justify-end md:space-y-6">
-                  <div className="lg:-mb-2 xl:-mb-1 flex justify-end md:justify-between items-center space-x-6">
-                    <p className="text-base leading-6 text-gray-600">Sort by</p>
-                    <div className="relative">
-                      <button
-                        onClick={() => setText(!text)}
-                        className="px-4 py-3 space-x-6 flex justify-center items-center bg-gray-100"
-                      >
-                        <p className="text-base font-medium leading-none text-gray-600">
-                          {value}
-                        </p>
-                        <svg
-                          className={`transform ${text ? "rotate-180" : ""} `}
-                          width={16}
-                          height={16}
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M4 6L8 10L12 6"
-                            stroke="#4B5563"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
-                      <div
-                        className={`w-32 right-0 ${
-                          text ? "" : "hidden"
-                        } absolute z-20 mt-2 bg-white shadow-md flex justify-start items-start flex-col`}
-                      >
-                        <button
-                          onClick={() => handleSortChange("asc")}
-                          className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
-                        >
-                          Low to High
-                        </button>
-                        <button
-                          onClick={() => handleSortChange("desc")}
-                          className="w-full text-left text-base px-4 py-2 hover:bg-gray-800 hover:text-white text-gray-800"
-                        >
-                          High to Low
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                <div className="md:hidden mt-6 md:mt-0 flex space-x-2 items-center justify-center">
+                  <button
+                    className="px-4 py-3 bg-gray-200 text-gray-700"
+                    onClick={() => setFilter(true)} // Show filter on mobile
+                  >
+                    Show Filters
+                  </button>
                 </div>
               </div>
-              {/* Only Product Grid Section changes based on product data */}
-              <div className="mt-6 w-full flex md:flex-row flex-col md:justify-start md:items-start space-y-8 md:space-y-0 md:space-x-8">
+
+              {/* Product List */}
+              <div className="mt-6 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {products?.length === 0 ? (
                   <p className="text-lg font-medium leading-6 text-gray-600">
                     No products available within the selected range.
@@ -304,12 +258,12 @@ const Products = () => {
                   products?.map((product) => (
                     <div
                       key={product._id}
-                      className="flex w-full flex-col justify-start items-start"
+                      className="flex flex-col justify-start items-start"
                       onClick={() => handleProductClick(product._id)}
                     >
                       <div className="w-full relative">
                         <img
-                          className="w-full"
+                          className="w-full h-64 object-cover"
                           src={product.images[0]}
                           alt={product.name}
                         />
@@ -330,7 +284,7 @@ const Products = () => {
                         {product.name}
                       </p>
                       <div className="mt-2 flex items-center">
-                        {[...Array(5)].map((i) => (
+                        {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
                             xmlns="http://www.w3.org/2000/svg"
@@ -352,7 +306,7 @@ const Products = () => {
                           </svg>
                         ))}
                       </div>
-                      <p className="mt-3  text-xl lg:text-2xl font-medium leading-6 text-center text-gray-600">
+                      <p className="mt-3 text-xl lg:text-2xl font-medium leading-6 text-center text-gray-600">
                         ${product.price}
                       </p>
                     </div>

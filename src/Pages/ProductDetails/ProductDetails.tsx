@@ -1,4 +1,5 @@
-import { useState } from "react";
+//@ts-nocheck
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -6,11 +7,14 @@ import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import { useGetProductByIdQuery } from "../../redux/features/Products/productsApi";
 import { addToCart } from "../../redux/reducer/cartReducer";
-import { RootState } from "../../redux/store"; // Ensure you import RootState from your store
+import { RootState } from "../../redux/store";
+import { Product } from "../../types/types";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: product, isLoading, error } = useGetProductByIdQuery(id || "");
+  const { data: response, isLoading, error } = useGetProductByIdQuery(id || "");
+  const product: Product | undefined = response?.data;
+
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
 
@@ -48,19 +52,19 @@ const ProductDetails = () => {
 
   const isAddToCartDisabled =
     product?.stock === 0 ||
-    (itemInCart && itemInCart.quantity >= !product?.stock);
+    (itemInCart && itemInCart.quantity >= product?.stock);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // Safely access product images
+  const productImage = product?.images?.[0] || "default-image-url.png";
 
-  if (error) {
-    return <div>Error: {"An error occurred"}</div>;
-  }
-
-  if (!product) {
-    return <div>Product not found</div>;
-  }
+  // Magnifier settings
+  const magnifierHeight = 150;
+  const magnifieWidth = 150;
+  const zoomLevel = 2;
+  const [imgWidth, setImgWidth] = useState(0);
+  const [imgHeight, setImgHeight] = useState(0);
+  const [showMagnifier, setShowMagnifier] = useState(false);
+  const [[x, y], setXY] = useState([0, 0]);
 
   return (
     <>
@@ -69,27 +73,60 @@ const ProductDetails = () => {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-wrap -mx-4">
             <div className="w-full md:w-1/2 px-4 mb-8">
-              <img
-                src={product?.images[0]}
-                alt={product?.name}
-                className="w-full h-auto rounded-lg shadow-md mb-4"
-                id="mainImage"
-              />
-              <div className="flex gap-4 py-4 justify-center overflow-x-auto">
-                {product?.images?.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
+              {/* Magnifier Image Section */}
+              <div className="relative h-full w-full">
+                <img
+                  src={productImage}
+                  alt={product?.name || "Product Image"}
+                  className="w-full h-auto rounded-lg shadow-md mb-4"
+                  onMouseEnter={(e) => {
+                    const elem = e.currentTarget;
+                    const { width, height } = elem.getBoundingClientRect();
+                    setImgWidth(width);
+                    setImgHeight(height);
+                    setShowMagnifier(true);
+                  }}
+                  onMouseMove={(e) => {
+                    const elem = e.currentTarget;
+                    const { top, left } = elem.getBoundingClientRect();
+                    const x = e.pageX - left - window.pageXOffset;
+                    const y = e.pageY - top - window.pageYOffset;
+                    setXY([x, y]);
+                  }}
+                  onMouseLeave={() => {
+                    setShowMagnifier(false);
+                  }}
+                />
+
+                {/* Magnifier */}
+                {showMagnifier && (
+                  <div
+                    className="absolute pointer-events-none border border-gray-200 bg-white rounded-full"
+                    style={{
+                      height: `${magnifierHeight}px`,
+                      width: `${magnifieWidth}px`,
+                      top: `${y - magnifierHeight / 2}px`,
+                      left: `${x - magnifieWidth / 2}px`,
+                      backgroundImage: `url(${productImage})`,
+                      backgroundSize: `${imgWidth * zoomLevel}px ${
+                        imgHeight * zoomLevel
+                      }px`,
+                      backgroundPositionX: `${
+                        -x * zoomLevel + magnifieWidth / 2
+                      }px`,
+                      backgroundPositionY: `${
+                        -y * zoomLevel + magnifierHeight / 2
+                      }px`,
+                    }}
                   />
-                ))}
+                )}
               </div>
+
+              <div className="flex gap-4 py-4 justify-center overflow-x-auto"></div>
             </div>
 
             <div className="w-full md:w-1/2 px-4">
               <h2 className="text-3xl font-bold mb-2">{product?.name}</h2>
-              {/* <p className="text-gray-600 mb-4">SKU: {product?.sku}</p> */}
               <div className="mb-4">
                 <span className="text-2xl font-bold mr-2">
                   ${product?.price}
@@ -117,18 +154,8 @@ const ProductDetails = () => {
               </div>
 
               <p className="text-gray-700 mb-6">
-                {product?.description ||
-                  "Experience premium sound quality and industry-leading noise cancellation with these wireless headphones. Perfect for music lovers and frequent travelers."}
+                {product?.description || "No description available."}
               </p>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2">Color:</h3>
-                <div className="flex space-x-2">
-                  <button className="w-8 h-8 bg-black rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"></button>
-                  <button className="w-8 h-8 bg-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"></button>
-                  <button className="w-8 h-8 bg-blue-500 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"></button>
-                </div>
-              </div>
 
               <div className="mb-6">
                 <label

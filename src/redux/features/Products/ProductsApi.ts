@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Product, ProductQueryParams } from "../../../types/types";
+import { Product } from "../../../types/types";
 import { baseApi } from "../../api/baseApi";
 
 export const productsApi = baseApi.injectEndpoints({
@@ -13,7 +13,6 @@ export const productsApi = baseApi.injectEndpoints({
         if (sortOrder) url += `sortOrder=${sortOrder}&`;
         return { url, method: "GET" };
       },
-      // Adjust to handle the backend response format
       transformResponse: (response: { success: boolean; data: Product[] }) =>
         response.data,
       providesTags: (result) =>
@@ -41,7 +40,7 @@ export const productsApi = baseApi.injectEndpoints({
     }),
     deleteProduct: builder.mutation<void, string>({
       query: (id) => ({
-        url: `/product/${id}`,
+        url: `/products/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: [{ type: "Products", id: "LIST" }],
@@ -51,7 +50,7 @@ export const productsApi = baseApi.injectEndpoints({
       { id: string; formData: FormData }
     >({
       query: ({ id, formData }) => ({
-        url: `/product/${id}`,
+        url: `/products/${id}`,
         method: "PUT",
         body: formData,
       }),
@@ -59,6 +58,26 @@ export const productsApi = baseApi.injectEndpoints({
         { type: "Products", id },
         { type: "Products", id: "LIST" },
       ],
+    }),
+    // Add Best Selling Products API here
+    getBestSellingProducts: builder.query<Product[], void>({
+      query: () => ({
+        url: `/best-selling`,
+        method: "GET",
+      }),
+      // Handle response and transform it if needed
+      transformResponse: (response: { success: boolean; data: Product[] }) =>
+        response.data,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((product) => ({
+                type: "Products" as const,
+                id: product._id || "UNKNOWN_PRODUCT_ID", // Handle undefined id
+              })),
+              { type: "Products", id: "BEST_SELLING" },
+            ]
+          : [{ type: "Products", id: "BEST_SELLING" }],
     }),
   }),
 });
@@ -69,4 +88,5 @@ export const {
   useCreateProductMutation,
   useDeleteProductMutation,
   useUpdateProductMutation,
+  useGetBestSellingProductsQuery, // Export the new hook for best-selling products
 } = productsApi;

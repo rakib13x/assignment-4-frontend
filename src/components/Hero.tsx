@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { FlipWords } from "./ui/flip-words";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const words = ["adventure", "comfort", "nature", "freedom"];
@@ -14,13 +14,13 @@ const Hero = () => {
         </span>
 
         <div className="text-4xl md:text-6xl mx-auto font-normal text-green-700">
-          Embrace
-          <FlipWords words={words} /> <br />
-          with our Gear
+          Embrace Adventure with our Gear
         </div>
-        <button className="bg-green-500 text-white font-medium py-2 px-4 rounded transition-all mt-6 hover:bg-green-600 active:scale-95">
-          Let's Explore
-        </button>
+        <Link to="/allProducts">
+          <button className="bg-green-500 text-white font-medium py-2 px-4 rounded transition-all mt-6 hover:bg-green-600 active:scale-95">
+            Let's Explore
+          </button>
+        </Link>
       </div>
       <ShuffleGrid />
     </section>

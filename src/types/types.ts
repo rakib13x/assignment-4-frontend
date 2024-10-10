@@ -1,5 +1,6 @@
 //@ts-nocheck
 export interface Product {
+  productDetails: any;
   _id: Key | null | undefined;
   id: string;
   name: string;

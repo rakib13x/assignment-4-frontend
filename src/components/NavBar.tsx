@@ -1,10 +1,18 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showMenuSm, setShowMenuSm] = useState(false);
   const [search, setSearch] = useState(false);
+
+  const cartItems = useSelector((state: any) => state.cart.items);
+
+  const cartItemCount = cartItems.reduce(
+    (total: any, item: { quantity: any }) => total + item.quantity,
+    0
+  );
 
   return (
     <div className="dark:bg-gray-900">
@@ -13,7 +21,7 @@ const NavBar = () => {
           <div className="lg:w-3/12">
             <div className="w-7/12 hidden lg:flex items-center space-x-3 border-b border-gray-200 pb-2">
               <div>
-                <svg
+                {/* <svg
                   className="fill-stroke text-gray-600 dark:text-white"
                   width={20}
                   height={20}
@@ -35,7 +43,7 @@ const NavBar = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
-                </svg>
+                </svg> */}
               </div>
               <input
                 type="text"
@@ -48,7 +56,7 @@ const NavBar = () => {
               aria-label="Open Menu"
               className="text-gray-800 dark:text-white hidden md:block lg:hidden focus:outline-none focus:ring-2 focus:ring-gray-800 rounded"
             >
-              <svg
+              {/* <svg
                 className="fill-stroke"
                 width={24}
                 height={24}
@@ -77,7 +85,7 @@ const NavBar = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-              </svg>
+              </svg> */}
             </button>
             <button
               onClick={() => setSearch(true)}
@@ -180,34 +188,12 @@ const NavBar = () => {
             </div>
           </div>
           <div className="lg:w-3/12 flex justify-end items-center space-x-4">
-            <a
-              aria-label="view favourites"
-              className="hidden md:block focus:outline-none text-gray-800 dark:text-white focus:ring-2 focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5"
-              href="javascript:void(0)"
-            >
-              <svg
-                className="fill-stroke"
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M20.8401 4.60987C20.3294 4.09888 19.7229 3.69352 19.0555 3.41696C18.388 3.14039 17.6726 2.99805 16.9501 2.99805C16.2276 2.99805 15.5122 3.14039 14.8448 3.41696C14.1773 3.69352 13.5709 4.09888 13.0601 4.60987L12.0001 5.66987L10.9401 4.60987C9.90843 3.57818 8.50915 2.99858 7.05012 2.99858C5.59109 2.99858 4.19181 3.57818 3.16012 4.60987C2.12843 5.64156 1.54883 7.04084 1.54883 8.49987C1.54883 9.95891 2.12843 11.3582 3.16012 12.3899L4.22012 13.4499L12.0001 21.2299L19.7801 13.4499L20.8401 12.3899C21.3511 11.8791 21.7565 11.2727 22.033 10.6052C22.3096 9.93777 22.4519 9.22236 22.4519 8.49987C22.4519 7.77738 22.3096 7.06198 22.033 6.39452C21.7565 5.72706 21.3511 5.12063 20.8401 4.60987V4.60987Z"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </a>
-            <a
+            <Link
+              to="/cart"
               aria-label="Shopping bag"
               className="hidden md:block focus:outline-none text-gray-800 dark:text-white focus:ring-2 focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5"
-              href="javascript:void(0)"
             >
-              <svg
+              {/* <svg
                 className="fill-stroke"
                 width={24}
                 height={24}
@@ -229,8 +215,33 @@ const NavBar = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-              </svg>
-            </a>
+              </svg> */}
+              <div className="  flex justify-center items-center">
+                <div className="relative py-0">
+                  <div className="t-0 absolute left-3">
+                    {cartItemCount > 0 && (
+                      <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white">
+                        {cartItemCount}
+                      </p>
+                    )}
+                  </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="file: mt-4 h-6 w-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </Link>
             <button
               onClick={() => setShowMenuSm(true)}
               aria-label="open menu"
@@ -407,7 +418,7 @@ const NavBar = () => {
                       className="fill-stroke text-black dark:text-white"
                       aria-label="show options"
                     >
-                      <svg
+                      {/* <svg
                         width={16}
                         height={16}
                         viewBox="0 0 16 16"
@@ -421,7 +432,7 @@ const NavBar = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
-                      </svg>
+                      </svg> */}
                     </button>
                   </li>
                   <li className="flex items-center justify-between">
@@ -549,119 +560,9 @@ const NavBar = () => {
               </button>
             </div>
           </div>
-          <div className="mt-8 mx-4">
-            <h2 className="text-sm text-gray-600 dark:text-gray-300 uppercase">
-              Suggestions
-            </h2>
-            <ul className="mt-6 flex flex-col space-y-6">
-              <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-sm text-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                >
-                  Bags
-                </a>
-              </li>
-              <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-sm text-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                >
-                  Shoes
-                </a>
-              </li>
-              <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-sm text-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                >
-                  Capes
-                </a>
-              </li>
-              <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-sm text-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                >
-                  Coats
-                </a>
-              </li>
-              <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-sm text-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                >
-                  Denim 2021
-                </a>
-              </li>
-              <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-sm text-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                >
-                  Leather shoe collection 2021
-                </a>
-              </li>
-              <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-sm text-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                >
-                  Active wear
-                </a>
-              </li>
-              <li className="flex items-center justify-between">
-                <a
-                  href="javascript:void(0)"
-                  className="text-sm text-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                >
-                  Sweat suits
-                </a>
-              </li>
-            </ul>
-          </div>
+
           <div className="w-full h-full flex items-end">
             <ul className="bg-gray-50 dark:bg-gray-800 py-10 px-4 flex flex-col space-y-8 w-full">
-              <li>
-                <a
-                  className="flex items-center space-x-2 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
-                  href="javascript:void(0)"
-                >
-                  <div>
-                    <svg
-                      className="fill-stroke"
-                      width={22}
-                      height={22}
-                      viewBox="0 0 22 22"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M4.33333 1L1 5V19C1 19.5304 1.23413 20.0391 1.65087 20.4142C2.06762 20.7893 2.63285 21 3.22222 21H18.7778C19.3671 21 19.9324 20.7893 20.3491 20.4142C20.7659 20.0391 21 19.5304 21 19V5L17.6667 1H4.33333Z"
-                        stroke="currentColor"
-                        strokeWidth="1.25"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M1 5H21"
-                        stroke="currentColor"
-                        strokeWidth="1.25"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M15.4436 9C15.4436 10.0609 14.9753 11.0783 14.1418 11.8284C13.3083 12.5786 12.1779 13 10.9991 13C9.82039 13 8.68993 12.5786 7.85643 11.8284C7.02294 11.0783 6.55469 10.0609 6.55469 9"
-                        stroke="currentColor"
-                        strokeWidth="1.25"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <p className="text-base">Cart</p>
-                </a>
-              </li>
               <li>
                 <a
                   className="flex items-center space-x-2 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
@@ -745,7 +646,7 @@ const NavBar = () => {
                   Home
                 </Link>
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
-                  <svg
+                  {/* <svg
                     className="fill-stroke"
                     width={16}
                     height={16}
@@ -760,7 +661,7 @@ const NavBar = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                  </svg>
+                  </svg> */}
                 </button>
               </li>
               <li className="flex items-center justify-between">
@@ -771,7 +672,7 @@ const NavBar = () => {
                   Products
                 </Link>
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
-                  <svg
+                  {/* <svg
                     className="fill-stroke"
                     width={16}
                     height={16}
@@ -786,7 +687,7 @@ const NavBar = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                  </svg>
+                  </svg> */}
                 </button>
               </li>
               <li className="flex items-center justify-between">
@@ -797,7 +698,7 @@ const NavBar = () => {
                   About
                 </Link>
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
-                  <svg
+                  {/* <svg
                     className="fill-stroke"
                     width={16}
                     height={16}
@@ -812,7 +713,7 @@ const NavBar = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                  </svg>
+                  </svg> */}
                 </button>
               </li>
               <li className="flex items-center justify-between">
@@ -823,7 +724,7 @@ const NavBar = () => {
                   Dashboard
                 </Link>
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
-                  <svg
+                  {/* <svg
                     className="fill-stroke"
                     width={16}
                     height={16}
@@ -838,12 +739,12 @@ const NavBar = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                  </svg>
+                  </svg> */}
                 </button>
               </li>
               <li className="flex items-center justify-between">
                 <button className="focus:outline-none focus:ring-2 text-black dark:text-white focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5">
-                  <svg
+                  {/* <svg
                     className="fill-stroke"
                     width={16}
                     height={16}
@@ -858,7 +759,7 @@ const NavBar = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                  </svg>
+                  </svg> */}
                 </button>
               </li>
             </ul>
@@ -866,48 +767,53 @@ const NavBar = () => {
           <div className="w-full h-full flex items-end">
             <ul className="bg-gray-50 dark:bg-gray-800 py-10 px-4 flex flex-col space-y-8 w-full">
               <li>
-                <a
+                {/* <a
                   className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                   href="javascript:void(0)"
                 >
-                  <div>
-                    <svg
-                      width={22}
-                      height={22}
-                      viewBox="0 0 22 22"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                  <div className="lg:w-3/12 flex justify-end items-center space-x-4">
+                    {/* Add Cart icon with item count */}
+                {/* <Link
+                      to="/cart"
+                      aria-label="Shopping bag"
+                      className="relative hidden md:block focus:outline-none text-gray-800 dark:text-white focus:ring-2 focus:ring-gray-800 rounded hover:bg-gray-100 p-0.5"
                     >
-                      <path
-                        d="M4.33333 1L1 5V19C1 19.5304 1.23413 20.0391 1.65087 20.4142C2.06762 20.7893 2.63285 21 3.22222 21H18.7778C19.3671 21 19.9324 20.7893 20.3491 20.4142C20.7659 20.0391 21 19.5304 21 19V5L17.6667 1H4.33333Z"
-                        stroke="#1F2937"
-                        strokeWidth="1.25"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M1 5H21"
-                        stroke="#1F2937"
-                        strokeWidth="1.25"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M15.4436 9C15.4436 10.0609 14.9753 11.0783 14.1418 11.8284C13.3083 12.5786 12.1779 13 10.9991 13C9.82039 13 8.68993 12.5786 7.85643 11.8284C7.02294 11.0783 6.55469 10.0609 6.55469 9"
-                        stroke="#1F2937"
-                        strokeWidth="1.25"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <p className="text-base text-gray-800 dark:text-white">
-                    Cart
-                  </p>
-                </a>
+                      <svg
+                        className="fill-stroke"
+                        width={24}
+                        height={24}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.5 8.25V6.75C7.5 5.55653 7.97411 4.41193 8.81802 3.56802C9.66193 2.72411 10.8065 2.25 12 2.25V2.25C13.1935 2.25 14.3381 2.72411 15.182 3.56802C16.0259 4.41193 16.5 5.55653 16.5 6.75V8.25M3.75 8.25C3.55109 8.25 3.36032 8.32902 3.21967 8.46967C3.07902 8.61032 3 8.80109 3 9V19.125C3 20.5425 4.2075 21.75 5.625 21.75H18.375C19.7925 21.75 21 20.6011 21 19.1836V9C21 8.80109 20.921 8.61032 20.7803 8.46967C20.6397 8.32902 20.4489 8.25 20.25 8.25H3.75Z"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M7.5 10.5V11.25C7.5 12.4435 7.97411 13.5881 8.81802 14.432C9.66193 15.2759 10.8065 15.75 12 15.75C13.1935 15.75 14.3381 15.2759 15.182 14.432C16.0259 13.5881 16.5 12.4435 16.5 11.25V10.5"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg> */}
+
+                {/* Show cart item count as a badge */}
+                {/* {cartItemCount > 0 && (
+                        <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                          {cartItemCount}
+                        </span>
+                      )}
+                    </Link> */}
+                {/* </div> */}
+                {/* </a>  */}
               </li>
               <li>
-                <a
+                {/* <a
                   className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline"
                   href="javascript:void(0)"
                 >
@@ -931,7 +837,7 @@ const NavBar = () => {
                   <p className="text-base text-gray-800 dark:text-white">
                     Wishlist
                   </p>
-                </a>
+                </a> */}
               </li>
             </ul>
           </div>

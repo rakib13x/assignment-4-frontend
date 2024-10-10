@@ -1,12 +1,10 @@
-// src/redux/features/Products/orderApi.ts
-
 import { baseApi } from "../../api/baseApi";
 
 export const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createPaymentIntent: builder.mutation<
       { clientSecret: string },
-      { amount: number }
+      { amount: number; products: { productId: string; quantity: number }[] }
     >({
       query: (data) => ({
         url: `/payment/create-payment-intent`,
@@ -21,8 +19,24 @@ export const orderApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    createCodOrder: builder.mutation<
+      any,
+      {
+        user: any;
+        products: { productId: string; quantity: number; price: number }[];
+      }
+    >({
+      query: (data) => ({
+        url: `/payment/cod-order`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useCreatePaymentIntentMutation, useConfirmPaymentMutation } =
-  orderApi;
+export const {
+  useCreatePaymentIntentMutation,
+  useConfirmPaymentMutation,
+  useCreateCodOrderMutation,
+} = orderApi;

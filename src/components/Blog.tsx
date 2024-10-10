@@ -1,263 +1,169 @@
+import liveLife from "../assets/images/lite-gear.webp";
 const Blog = () => {
+  console.log(liveLife);
   return (
-    <div>
-      <section className="px-5 py-10 dark:bg-gray-100 dark:text-gray-800">
-        <div className="container grid grid-cols-12 mx-auto gap-y-6 md:gap-10">
-          <div className="flex flex-col justify-between col-span-12 py-2 space-y-8 md:space-y-16 md:col-span-3">
-            <div className="flex flex-col space-y-8 md:space-y-12">
-              <div className="flex flex-col space-y-2">
-                <h3 className="flex items-center space-x-2 dark:text-gray-600">
-                  <span className="flex-shrink-0 w-2 h-2 uppercase rounded-full dark:bg-violet-600"></span>
-                  <span className="text-xs font-bold tracking-wider uppercase">
-                    Exclusive
-                  </span>
-                </h3>
-                <a
-                  rel="noopener noreferrer"
-                  href="#"
-                  className="font-serif hover:underline"
-                >
-                  Donec sed elit quis odio mollis dignissim eget et nulla.
-                </a>
-                <p className="text-xs dark:text-gray-600">
-                  47 minutes ago by
-                  <a
-                    rel="noopener noreferrer"
-                    href="#"
-                    className="hover:underline dark:text-violet-600"
-                  >
-                    Leroy Jenkins
-                  </a>
-                </p>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <h3 className="flex items-center space-x-2 dark:text-gray-600">
-                  <span className="flex-shrink-0 w-2 h-2 uppercase rounded-full dark:bg-violet-600"></span>
-                  <span className="text-xs font-bold tracking-wider uppercase">
-                    Exclusive
-                  </span>
-                </h3>
-                <a
-                  rel="noopener noreferrer"
-                  href="#"
-                  className="font-serif hover:underline"
-                >
-                  Ut fermentum nunc quis ipsum laoreet condimentum.
-                </a>
-                <p className="text-xs dark:text-gray-600">
-                  2 hours ago by
-                  <a
-                    rel="noopener noreferrer"
-                    href="#"
-                    className="hover:underline dark:text-violet-600"
-                  >
-                    Leroy Jenkins
-                  </a>
-                </p>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <h3 className="flex items-center space-x-2 dark:text-gray-600">
-                  <span className="flex-shrink-0 w-2 h-2 uppercase rounded-full dark:bg-violet-600"></span>
-                  <span className="text-xs font-bold tracking-wider uppercase">
-                    Exclusive
-                  </span>
-                </h3>
-                <a
-                  rel="noopener noreferrer"
-                  href="#"
-                  className="font-serif hover:underline"
-                >
-                  Nunc nec ipsum lobortis, pulvinar neque sed.
-                </a>
-                <p className="text-xs dark:text-gray-600">
-                  4 hours ago by
-                  <a
-                    rel="noopener noreferrer"
-                    href="#"
-                    className="hover:underline dark:text-violet-600"
-                  >
-                    Leroy Jenkins
-                  </a>
-                </p>
-              </div>
+    <section className="w-screen py-20">
+      <h1 className="mb-12 text-center font-sans text-5xl font-bold">
+        Our Blog
+      </h1>
+      <div className="mx-auto grid max-w-screen-lg grid-cols-1 gap-5 p-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-10">
+        <article className="group h-full overflow-hidden rounded-lg border-2 border-gray-200 border-opacity-60 shadow-lg">
+          <img
+            className="w-full transform object-cover object-center transition duration-500 ease-in-out group-hover:scale-105 md:h-36 lg:h-48"
+            src="https://images.unsplash.com/photo-1611002214172-792c1f90b59a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw3fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
+            alt="blog"
+          />
+          <h2 className="title-font inline-block cursor-pointer px-6 pt-4 pb-1 text-xs font-semibold uppercase tracking-widest text-orange-600 hover:font-bold">
+            Cities
+          </h2>
+          <div className="py-1 px-6">
+            <h1 className="title-font mb-3 inline-block cursor-pointer text-xl capitali font-extrabold tracking-wide text-gray-800">
+              How to get around in New York
+            </h1>
+            <p className="line-clamp-6 mb-3 cursor-pointer overflow-hidden leading-relaxed text-gray-500">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil,
+              maxime. Accusamus qui incidunt est rem at corrupti, earum fugiat
+              iure.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-between px-6 pt-1 pb-4">
+            <div className="flex flex-wrap text-sm text-gray-500">
+              <span className="mr-1">Oct 15, 2024</span>
+              <span className="">· 9 min read</span>
             </div>
-            <div className="flex flex-col w-full space-y-2">
-              <div className="flex w-full h-1 bg-opacity-10 dark:bg-violet-600">
-                <div className="w-1/2 h-full dark:bg-violet-600"></div>
-              </div>
-              <a
-                rel="noopener noreferrer"
-                href="#"
-                className="flex items-center justify-between w-full"
-              >
-                <span className="text-xs font-bold tracking-wider uppercase">
-                  See more exclusives
-                </span>
+            <div className="mt-1">
+              <span className="mr-3 ml-auto inline-flex items-center py-1 pr-3 text-sm leading-none text-gray-400 md:ml-0 lg:ml-auto">
                 <svg
-                  viewBox="0 0 24 24"
-                  strokeWidth="2.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
                   fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-4 strokeCurrent dark:text-violet-600"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  ></path>
                 </svg>
-              </a>
-            </div>
-          </div>
-          <div
-            className="relative flex col-span-12 dark:bg-gray-500 bg-center bg-no-repeat bg-cover xl:col-span-6 lg:col-span-5 md:col-span-9 min-h-96"
-            style={{
-              backgroundImage:
-                "url('https://source.unsplash.com/random/239x319')",
-            }}
-          >
-            <span className="absolute px-1 pb-2 text-xs font-bold uppercase border-b-2 left-6 top-6 dark:text-gray-800 dark:border-violet-600">
-              paris, france
-            </span>
-            <a className="flex flex-col items-center justify-end p-6 text-center sm:p-8 group dark:via- flex-grow-1 bg-gradient-to-b dark:from-gray-50 dark:to-gray-50">
-              <span className="flex items-center mb-4 space-x-2 dark:text-violet-600">
-                <span className="relative flex-shrink-0 w-2 h-2 rounded-full dark:bg-violet-600">
-                  <span className="absolute flex-shrink-0 w-3 h-3 rounded-full -left-1 -top-1 animate-ping dark:bg-violet-600"></span>
-                </span>
-                <span className="text-sm font-bold">Live</span>
+                3.5K
               </span>
-              <h1
-                rel="noopener noreferrer"
-                className="font-serif text-2xl font-semibold group-hover:underline dark:text-gray-800"
-              >
-                Morbi mattis justo est, ac consectetur dui eleifend vitae. Donec
-                venenatis?
-              </h1>
-            </a>
-          </div>
-          <div className="hidden py-2 xl:col-span-3 lg:col-span-4 md:hidden lg:block">
-            <div className="mb-8 space-x-5 border-b-2 border-opacity-10 dark:border-violet-600">
-              <button
-                type="button"
-                className="pb-5 text-xs font-bold uppercase border-b-2 dark:border-violet-600"
-              >
-                Latest
-              </button>
-              <button
-                type="button"
-                className="pb-5 text-xs font-bold uppercase border-b-2 dark:border- dark:text-gray-600"
-              >
-                Popular
-              </button>
-            </div>
-            <div className="flex flex-col divide-y dark:divide-gray-300">
-              <div className="flex px-1 py-4">
-                <img
-                  alt=""
-                  className="flex-shrink-0 object-cover w-20 h-20 mr-4 dark:bg-gray-500"
-                  src="https://source.unsplash.com/random/244x324"
-                />
-                <div className="flex flex-col flex-grow">
-                  <a
-                    rel="noopener noreferrer"
-                    href="#"
-                    className="font-serif hover:underline"
-                  >
-                    Aenean ac tristique lorem, ut mollis dui.
-                  </a>
-                  <p className="mt-auto text-xs dark:text-gray-600">
-                    5 minutes ago
-                    <a
-                      rel="noopener noreferrer"
-                      href="#"
-                      className="block dark:text-blue-600 lg:ml-2 lg:inline hover:underline"
-                    >
-                      Politics
-                    </a>
-                  </p>
-                </div>
-              </div>
-              <div className="flex px-1 py-4">
-                <img
-                  alt=""
-                  className="flex-shrink-0 object-cover w-20 h-20 mr-4 dark:bg-gray-500"
-                  src="https://source.unsplash.com/random/245x325"
-                />
-                <div className="flex flex-col flex-grow">
-                  <a
-                    rel="noopener noreferrer"
-                    href="#"
-                    className="font-serif hover:underline"
-                  >
-                    Nulla consectetur efficitur.
-                  </a>
-                  <p className="mt-auto text-xs dark:text-gray-600">
-                    14 minutes ago
-                    <a
-                      rel="noopener noreferrer"
-                      href="#"
-                      className="block dark:text-blue-600 lg:ml-2 lg:inline hover:underline"
-                    >
-                      Sports
-                    </a>
-                  </p>
-                </div>
-              </div>
-              <div className="flex px-1 py-4">
-                <img
-                  alt=""
-                  className="flex-shrink-0 object-cover w-20 h-20 mr-4 dark:bg-gray-500"
-                  src="https://source.unsplash.com/random/246x326"
-                />
-                <div className="flex flex-col flex-grow">
-                  <a
-                    rel="noopener noreferrer"
-                    href="#"
-                    className="font-serif hover:underline"
-                  >
-                    Vitae semper augue purus tincidunt libero.
-                  </a>
-                  <p className="mt-auto text-xs dark:text-gray-600">
-                    22 minutes ago
-                    <a
-                      rel="noopener noreferrer"
-                      href="#"
-                      className="block dark:text-blue-600 lg:ml-2 lg:inline hover:underline"
-                    >
-                      World
-                    </a>
-                  </p>
-                </div>
-              </div>
-              <div className="flex px-1 py-4">
-                <img
-                  alt=""
-                  className="flex-shrink-0 object-cover w-20 h-20 mr-4 dark:bg-gray-500"
-                  src="https://source.unsplash.com/random/247x327"
-                />
-                <div className="flex flex-col flex-grow">
-                  <a
-                    rel="noopener noreferrer"
-                    href="#"
-                    className="font-serif hover:underline"
-                  >
-                    Suspendisse potenti.
-                  </a>
-                  <p className="mt-auto text-xs dark:text-gray-600">
-                    37 minutes ago
-                    <a
-                      rel="noopener noreferrer"
-                      href="#"
-                      className="block dark:text-blue-600 lg:ml-2 lg:inline hover:underline"
-                    >
-                      Business
-                    </a>
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </article>
+
+        <article className="group h-full overflow-hidden rounded-lg border-2 border-gray-200 border-opacity-60 shadow-lg">
+          <img
+            className="w-full transform object-cover object-center transition duration-500 ease-in-out group-hover:scale-105 md:h-36 lg:h-48"
+            src="https://images.unsplash.com/photo-1660569883128-765b7c16f731?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
+            alt="blog"
+          />
+          <h2 className="title-font inline-block cursor-pointer px-6 pt-4 pb-1 text-xs font-semibold uppercase tracking-widest text-orange-600 hover:font-bold">
+            Cities
+          </h2>
+          <div className="py-1 px-6">
+            <h1 className="title-font mb-3 inline-block cursor-pointer text-xl capitali font-extrabold tracking-wide text-gray-800">
+              How to get around in New York
+            </h1>
+            <p className="line-clamp-6 mb-3 cursor-pointer overflow-hidden leading-relaxed text-gray-500">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil,
+              maxime. Accusamus qui incidunt est rem at corrupti, earum fugiat
+              iure.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-between px-6 pt-1 pb-4">
+            <div className="flex flex-wrap text-sm text-gray-500">
+              <span className="mr-1">Oct 20, 2024</span>
+              <span className="">· 9 min read</span>
+            </div>
+            <div className="mt-1">
+              <span className="mr-3 ml-auto inline-flex items-center py-1 pr-3 text-sm leading-none text-gray-400 md:ml-0 lg:ml-auto">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  ></path>
+                </svg>
+                3.5K
+              </span>
+            </div>
+          </div>
+        </article>
+
+        <article className="group h-full overflow-hidden rounded-lg border-2 border-gray-200 border-opacity-60 shadow-lg">
+          <img
+            className="w-full transform object-cover object-center transition duration-500 ease-in-out group-hover:scale-105 md:h-36 lg:h-48"
+            src="https://images.unsplash.com/photo-1660548311281-61e57dad92e3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
+            alt="blog"
+          />
+          <h2 className="title-font inline-block cursor-pointer px-6 pt-4 pb-1 text-xs font-semibold uppercase tracking-widest text-orange-600 hover:font-bold">
+            Cities
+          </h2>
+          <div className="py-1 px-6">
+            <h1 className="title-font mb-3 inline-block cursor-pointer text-xl capitali font-extrabold tracking-wide text-gray-800">
+              How to get around in New York
+            </h1>
+            <p className="line-clamp-6 mb-3 cursor-pointer overflow-hidden leading-relaxed text-gray-500">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil,
+              maxime. Accusamus qui incidunt est rem at corrupti, earum fugiat
+              iure.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-between px-6 pt-1 pb-4">
+            <div className="flex flex-wrap text-sm text-gray-500">
+              <span className="mr-1">Oct 30, 2024</span>
+              <span className="">· 9 min read</span>
+            </div>
+            <div className="mt-1">
+              <span className="mr-3 ml-auto inline-flex items-center py-1 pr-3 text-sm leading-none text-gray-400 md:ml-0 lg:ml-auto">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  ></path>
+                </svg>
+                3.5K
+              </span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
   );
 };
 

@@ -1,8 +1,10 @@
-// src/Pages/ProductManagement/ProductManagement.tsx
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import Swal from "sweetalert2";
+import Footer from "../../components/Footer";
 import Modal from "../../components/Modal";
+import NavBar from "../../components/NavBar";
 import UpdateModal from "../../components/UpdateModal";
 import {
   useDeleteProductMutation,
@@ -12,9 +14,7 @@ import {
 const ProductManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(
-    null
-  );
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null); // Store the entire product
 
   const { data: products = [], isLoading } = useGetAllProductsQuery({});
   const [deleteProduct] = useDeleteProductMutation();
@@ -23,8 +23,8 @@ const ProductManagement = () => {
     setIsModalOpen(true);
   };
 
-  const handleUpdateProductClick = (productId: string) => {
-    setSelectedProductId(productId);
+  const handleUpdateProductClick = (product: any) => {
+    setSelectedProduct(product); // Set the entire product here
     setIsUpdateModalOpen(true);
   };
 
@@ -33,7 +33,7 @@ const ProductManagement = () => {
   };
   const handleCloseUpdateModal = () => {
     setIsUpdateModalOpen(false);
-    setSelectedProductId(null);
+    setSelectedProduct(null); // Clear the selected product
   };
 
   const handleDeleteProduct = async (productId: string) => {
@@ -42,13 +42,21 @@ const ProductManagement = () => {
       return;
     }
 
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      try {
-        await deleteProduct(productId).unwrap();
-        alert("Product deleted successfully.");
-      } catch (error) {
-        console.error("Failed to delete product:", error);
-      }
+    try {
+      await deleteProduct(productId).unwrap();
+      Swal.fire({
+        title: "Product Added successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      console.error("Failed to create product:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "There was an error creating the product.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -58,6 +66,7 @@ const ProductManagement = () => {
 
   return (
     <>
+      <NavBar />
       <div className="py-12">
         <div className="mx-auto container bg-white shadow rounded">
           <div className="flex flex-col lg:flex-row p-8 justify-around items-start lg:items-stretch w-full">
@@ -88,6 +97,9 @@ const ProductManagement = () => {
                   </th>
                   <th className="text-gray-600 font-normal pr-6 text-left text-sm tracking-normal leading-4">
                     Category
+                  </th>
+                  <th className="text-gray-600 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                    Stock
                   </th>
                   <th className="text-gray-600 font-normal pr-6 text-left text-sm tracking-normal leading-4">
                     Action
@@ -123,10 +135,13 @@ const ProductManagement = () => {
                         {product.category.join(", ")}
                       </td>
                       <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 tracking-normal leading-4">
+                        {product.stock}
+                      </td>
+                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 tracking-normal leading-4">
                         <div className="flex items-center">
                           <button
                             className="rounded focus:outline-none"
-                            onClick={() => handleUpdateProductClick(product.id)}
+                            onClick={() => handleUpdateProductClick(product)} // Pass entire product
                           >
                             <div className="p-2 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer text-indigo-700">
                               <FaEdit className="size-5" />
@@ -158,12 +173,13 @@ const ProductManagement = () => {
         </div>
       </div>
       {isModalOpen && <Modal onClose={handleCloseModal} />}
-      {isUpdateModalOpen && selectedProductId && (
+      {isUpdateModalOpen && selectedProduct && (
         <UpdateModal
           onClose={handleCloseUpdateModal}
-          // productId={selectedProductId}
+          product={selectedProduct}
         />
       )}
+      <Footer />
     </>
   );
 };
